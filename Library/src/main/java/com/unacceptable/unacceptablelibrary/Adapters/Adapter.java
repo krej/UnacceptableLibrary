@@ -100,9 +100,11 @@ implements View.OnClickListener
         public TextView txtHeader;
         public TextView txtFooter;
         public TextView txtThirdLine, txtFourthLine;
+        public View view;
 
         public ViewHolder(View v) {
             super(v);
+            view = v;
             txtHeader = (TextView) v.findViewById(R.id.firstLine);
             try {
                 txtFooter = (TextView) v.findViewById(R.id.secondLine);
