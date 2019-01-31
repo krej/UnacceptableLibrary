@@ -1,7 +1,10 @@
 package com.unacceptable.unacceptablelibrary.Tools;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -41,16 +44,22 @@ public class Tools {
 
     public static boolean LoadSharedPrefs(Context ctx) {
         m_sharedPrefs = ctx.getSharedPreferences("Prefs", Context.MODE_PRIVATE);
-        return m_sharedPrefs != null;
+        //return m_sharedPrefs != null;
+        if (m_sharedPrefs == null) {
+            Tools.ShowToast(ctx, "Failed to load preferences", Toast.LENGTH_SHORT);
+            return false;
+        }
+
+        return true;
     }
 
 
-    public static DatabaseServer Server = DatabaseServer.BeerNet;
+    public static DatabaseServer Server = DatabaseServer.Desktop;
 
     enum DatabaseServer {
         Desktop {
             public String toString() {
-                return "http://localhost:50421/beernet";
+                return "http://192.168.1.13:50421/";
             }
         },
 
@@ -62,7 +71,7 @@ public class Tools {
 
         BeerNet {
             public String toString() {
-                return "http://rest.unacceptable.beer:5123/beernet";
+                return "http://rest.unacceptable.beer:5123/";
             }
         }
 
@@ -74,7 +83,11 @@ public class Tools {
             return "http://192.168.1.11:50421/beernet";
 
         return "http://rest.unacceptable.beer:2403";*/
-        return Server.toString();
+        return Server.toString() + "beernet";
+    }
+
+    public static String HealthAPIURL() {
+        return Server.toString() + "health";
     }
 
 
@@ -105,5 +118,17 @@ public class Tools {
         }
 
         return objs;
+    }
+
+    public static Boolean LoginTokenExists(Activity ctx) {
+        if (Tools.GetAPIToken().length() > 0) return true;
+
+        LaunchSignInScreen(ctx);
+        return false;
+    }
+
+    public static void LaunchSignInScreen(Activity ctx) {
+        Intent i = new Intent(ctx, com.unacceptable.unacceptablelibrary.Screens.LoginActivity.class);
+        ctx.startActivity(i);
     }
 }
