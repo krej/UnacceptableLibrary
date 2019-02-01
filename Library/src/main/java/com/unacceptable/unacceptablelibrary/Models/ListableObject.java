@@ -54,4 +54,8 @@ public class ListableObject implements Serializable {
         return json.getBytes();
     }
 
+    public String toString() {
+        return name;
+    }
+
 }
