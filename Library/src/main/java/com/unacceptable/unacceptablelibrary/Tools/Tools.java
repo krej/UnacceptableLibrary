@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
+
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 public class Tools {
 
     public static SharedPreferences m_sharedPrefs;
+    public static String m_sAPISubName; //TODO: Should i save this elsewhere? In shared prefs? probably?
 
     public static double ParseDouble(String d) {
         if (d.length() == 0 ) return 0;
@@ -42,13 +45,15 @@ public class Tools {
         return APIToken;
     }
 
-    public static boolean LoadSharedPrefs(Context ctx) {
+    public static boolean LoadSharedPrefs(Context ctx, String sAPISubName) {
         m_sharedPrefs = ctx.getSharedPreferences("Prefs", Context.MODE_PRIVATE);
         //return m_sharedPrefs != null;
         if (m_sharedPrefs == null) {
             Tools.ShowToast(ctx, "Failed to load preferences", Toast.LENGTH_SHORT);
             return false;
         }
+
+        m_sAPISubName = sAPISubName;
 
         return true;
     }
@@ -83,7 +88,7 @@ public class Tools {
             return "http://192.168.1.11:50421/beernet";
 
         return "http://rest.unacceptable.beer:2403";*/
-        return Server.toString() + "beernet";
+        return Server.toString() + m_sAPISubName;
     }
 
     public static String HealthAPIURL() {
