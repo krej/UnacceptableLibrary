@@ -31,10 +31,15 @@ implements View.OnClickListener
     protected LayoutInflater inflater;
 
     public Adapter(int iLayout, int iDialogLayout) {
+        this(iLayout, iDialogLayout, true);
+    }
+
+    public Adapter(int iLayout, int iDialogLayout, boolean bAddEmpty) {
         m_Dataset = new ArrayList<ListableObject>();
         m_iLayout = iLayout;
         m_iDialogLayout = iDialogLayout;
-        add(new ListableObject());
+        if (bAddEmpty)
+            add(new ListableObject());
     }
 
 
@@ -91,7 +96,7 @@ implements View.OnClickListener
     }
 
     protected boolean OnlyEmptyIngredientExists() {
-        return (m_Dataset.size() == 1 && m_Dataset.get(0).name == "Empty");
+        return (m_Dataset.size() == 1 && m_Dataset.get(0).toString() == "Empty");
     }
 
     protected abstract boolean AddItem(Dialog d, boolean bExisting, String sExtraData);
