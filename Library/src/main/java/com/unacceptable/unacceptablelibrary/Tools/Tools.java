@@ -15,7 +15,11 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by zak on 11/16/2016.
@@ -59,7 +63,8 @@ public class Tools {
     }
 
 
-    public static DatabaseServer Server = DatabaseServer.Desktop;
+    //TODO: Put a setting in the app for this
+    public static DatabaseServer Server = DatabaseServer.BeerNet;
 
     enum DatabaseServer {
         Desktop {
@@ -94,6 +99,8 @@ public class Tools {
     public static String HealthAPIURL() {
         return Server.toString() + "health";
     }
+
+    public static String BeerNetAPIURL() {return Server.toString() + "beernet"; }
 
 
     public static String SanitizeDeploydJSON(String response) {
@@ -135,5 +142,14 @@ public class Tools {
     public static void LaunchSignInScreen(Activity ctx) {
         Intent i = new Intent(ctx, com.unacceptable.unacceptablelibrary.Screens.LoginActivity.class);
         ctx.startActivity(i);
+    }
+
+    public static String FormatDate(Date dt, String format) {
+        DateFormat dateFormat = new SimpleDateFormat(format, Locale.ENGLISH);
+        return dateFormat.format(dt);
+    }
+
+    public static boolean IsEmptyString(String str) {
+        return str == null || str.length() == 0;
     }
 }

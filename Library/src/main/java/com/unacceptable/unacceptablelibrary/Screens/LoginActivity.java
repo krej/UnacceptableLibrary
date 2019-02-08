@@ -124,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void SendLoginAttempt(final String username, final String password) {
-        String sLoginURL = Tools.RestAPIURL() + "/Login";
+        String sLoginURL = Tools.BeerNetAPIURL() + "/Login";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, sLoginURL, new Response.Listener<String>() {
 
@@ -156,9 +156,15 @@ public class LoginActivity extends AppCompatActivity {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
 
-                params.put("Content-Type", "application/json; charset=utf-8");
+                //params.put("Content-Type", "application/json; charset=utf-8");
+                params.put("Content-Type", "application/json");
                 //params.put("Authorization", "bearer " + Tools.APIToken);
                 return params;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
             }
 
             @Override
