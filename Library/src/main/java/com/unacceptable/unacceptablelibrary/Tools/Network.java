@@ -85,6 +85,14 @@ public class Network {
     }
 
     public static void WebRequest(int method, String url, final byte[] data, Response.Listener<String> listener, Response.ErrorListener errorListener) {
+        WebRequest(method, url, data, listener, errorListener, true);
+    }
+
+    public static void WebRequest(int method, String url, String data, Response.Listener<String> listener, Response.ErrorListener errorListener, final boolean bAddAuthentication) {
+        WebRequest(method, url, data.getBytes(), listener, errorListener, bAddAuthentication);
+    }
+
+    public static void WebRequest(int method, String url, final byte[] data, Response.Listener<String> listener, Response.ErrorListener errorListener, final boolean bAddAuthentication) {
         StringRequest request = new StringRequest(method, url, listener, errorListener) {
             @Override
             public byte[] getBody() throws AuthFailureError {
@@ -100,7 +108,9 @@ public class Network {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
 
-                params.put("Authorization", "bearer " + Tools.GetAPIToken());
+                params.put("Content-Type", "application/json");
+                if (bAddAuthentication)
+                    params.put("Authorization", "bearer " + Tools.GetAPIToken());
                 return params;
             }
         };

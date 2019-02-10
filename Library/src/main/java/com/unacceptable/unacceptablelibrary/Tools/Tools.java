@@ -62,7 +62,6 @@ public class Tools {
         return true;
     }
 
-
     //TODO: Put a setting in the app for this
     public static DatabaseServer Server = DatabaseServer.BeerNet;
 
@@ -132,15 +131,16 @@ public class Tools {
         return objs;
     }
 
-    public static Boolean LoginTokenExists(Activity ctx) {
+    public static Boolean LoginTokenExists(Activity ctx, Class<?> cNextActivity) {
         if (Tools.GetAPIToken().length() > 0) return true;
 
-        LaunchSignInScreen(ctx);
+        LaunchSignInScreen(ctx, cNextActivity);
         return false;
     }
 
-    public static void LaunchSignInScreen(Activity ctx) {
+    public static void LaunchSignInScreen(Activity ctx, Class<?> cNextActivity) {
         Intent i = new Intent(ctx, com.unacceptable.unacceptablelibrary.Screens.LoginActivity.class);
+        i.putExtra("NextActivity", cNextActivity);
         ctx.startActivity(i);
     }
 

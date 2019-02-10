@@ -27,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.unacceptable.unacceptablelibrary.Logic.LoginLogic;
 import com.unacceptable.unacceptablelibrary.R;
+import com.unacceptable.unacceptablelibrary.Repositories.LoginRepositoryImpl;
 import com.unacceptable.unacceptablelibrary.Tools.Network;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
@@ -44,12 +45,16 @@ public class LoginActivity extends AppCompatActivity implements LoginLogic.View 
     private View mProgressView;
     private View mLoginFormView;
 
-    private LoginLogic m_oLoginLogic = new LoginLogic();
+    private LoginLogic m_oLoginLogic;
+
+    private Class<?> m_cNextActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        m_oLoginLogic = new LoginLogic(new LoginRepositoryImpl(), getSharedPreferences("Prefs", Context.MODE_PRIVATE));
 
         m_oLoginLogic.attachView(this);
 
@@ -78,6 +83,9 @@ public class LoginActivity extends AppCompatActivity implements LoginLogic.View 
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        Intent i = getIntent();
+        m_cNextActivity = (Class<?>)i.getSerializableExtra("NextActivity");
     }
 
     private void passCredentialsToLogin() {
@@ -157,60 +165,14 @@ public class LoginActivity extends AppCompatActivity implements LoginLogic.View 
         }
     }
 
-    //TODO: I don't think this should be here, but to keep the app working while I get unit tests working, I'm leaving it here.
-    //TODO: I'll need to redo this when I move to testing with the network calls
-    public void SendLoginAttempt(final String username, final String password) {
-        String sLoginURL = Tools.BeerNetAPIURL() + "/Login";
+    @Override
+    public void showError(String sMessage) {
+        Tools.ShowToast(getApplicationContext(), sMessage, Toast.LENGTH_LONG);
+    }
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, sLoginURL, new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-                //mTextView.setText("Respone is :" + response);// + response.substring(0, 500));
-                //SetRecipeList(response);
-                SharedPreferences sharedPreferences = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                String token = response.substring(1, response.length() - 1); //response comes back with quotes on both sides - toss em out
-                editor.putString("APIToken", token);
-                editor.commit();
-
-
-                Intent i = new Intent(getApplicationContext(), getCallingActivity().getClass());
-                startActivity(i);
-                showProgress(false);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                //mTextView.setText("That didn't work " + error.getMessage());
-
-                Tools.ShowToast(getApplicationContext(), "Failed to login", Toast.LENGTH_LONG);
-                showProgress(false);
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-
-                //params.put("Content-Type", "application/json; charset=utf-8");
-                params.put("Content-Type", "application/json");
-                //params.put("Authorization", "bearer " + Tools.APIToken);
-                return params;
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/json";
-            }
-
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                String body ="{username: \"" + username + "\", password: \"" + password + "\"}";
-                return body.getBytes();
-            }
-        };
-
-        Network.getInstance(this).addToRequestQueue(stringRequest);
+    public void launchNextActivity() {
+        Intent i = new Intent(getApplicationContext(), m_cNextActivity);
+        startActivity(i);
     }
 }
 

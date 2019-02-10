@@ -1,6 +1,11 @@
 package com.unacceptable.unacceptablelibrary;
 
+import android.content.SharedPreferences;
+
+import com.android.volley.VolleyError;
 import com.unacceptable.unacceptablelibrary.Logic.LoginLogic;
+import com.unacceptable.unacceptablelibrary.Repositories.LoginRepository;
+import com.unacceptable.unacceptablelibrary.Repositories.RepositoryCallback;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -9,6 +14,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -17,18 +23,24 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class LoginTests {
     private LoginLogic m_oLoginLogic;
     private LoginLogic.View view;
+    private LoginRepository repository;
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor editor;
 
     @Before
     public void setup() {
-        m_oLoginLogic = new LoginLogic();
+        repository = mock(LoginRepository.class);
+        prefs = mock(SharedPreferences.class);
+        editor = mock(SharedPreferences.Editor.class);
+        m_oLoginLogic = new LoginLogic(repository, prefs);
+
         view = mock(LoginLogic.View.class);
         m_oLoginLogic.attachView(view);
-
-        //doAnswer(doReturn("")).when(view).getMyString(anyInt());
 
         doAnswer(new Answer() {
             @Override
@@ -36,6 +48,8 @@ public class LoginTests {
                 return "";
             }
         }).when(view).getMyString(anyInt());
+
+        when(prefs.edit()).thenReturn(editor);
     }
 
     @Test
@@ -45,7 +59,7 @@ public class LoginTests {
         verify(view).clearErrors();
         verify(view).setUsernameError(anyString());
         verify(view).sendFocusToUsername();
-        verify(view, never()).SendLoginAttempt(anyString(), anyString());
+        verify(repository, never()).SendLoginAttempt(anyString(), anyString(), any(RepositoryCallback.class));
     }
 
     @Test
@@ -55,7 +69,7 @@ public class LoginTests {
         verify(view).clearErrors();
         verify(view).setUsernameError(anyString());
         verify(view).sendFocusToUsername();
-        verify(view, never()).SendLoginAttempt(anyString(), anyString());
+        verify(repository, never()).SendLoginAttempt(anyString(), anyString(), any(RepositoryCallback.class));
     }
 
     @Test
@@ -65,7 +79,7 @@ public class LoginTests {
         verify(view).clearErrors();
         verify(view).setPasswordError(anyString());
         verify(view).sendFocusToPassword();
-        verify(view, never()).SendLoginAttempt(anyString(), anyString());
+        verify(repository, never()).SendLoginAttempt(anyString(), anyString(), any(RepositoryCallback.class));
     }
 
     @Test
@@ -75,7 +89,7 @@ public class LoginTests {
         verify(view).clearErrors();
         verify(view).setUsernameError(anyString());
         verify(view).sendFocusToUsername();
-        verify(view, never()).SendLoginAttempt(anyString(), anyString());
+        verify(repository, never()).SendLoginAttempt(anyString(), anyString(), any(RepositoryCallback.class));
     }
 
     @Test
@@ -85,7 +99,7 @@ public class LoginTests {
         verify(view).clearErrors();
         verify(view).setUsernameError(anyString());
         verify(view).sendFocusToUsername();
-        verify(view, never()).SendLoginAttempt(anyString(), anyString());
+        verify(repository, never()).SendLoginAttempt(anyString(), anyString(), any(RepositoryCallback.class));
     }
 
     @Test
@@ -95,7 +109,8 @@ public class LoginTests {
         verify(view).clearErrors();
         verify(view).setPasswordError(anyString());
         verify(view).sendFocusToPassword();
-        verify(view, never()).SendLoginAttempt(anyString(), anyString());
+        verify(repository, never()).SendLoginAttempt(anyString(), anyString(), any(RepositoryCallback.class));
+
     }
 
     @Test
@@ -103,10 +118,42 @@ public class LoginTests {
         String username = "zak";
         String password = "111111";
 
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                RepositoryCallback callback = invocation.getArgument(2);
+                callback.onSuccess("success");
+                return null;
+            }
+        }).when(repository).SendLoginAttempt(anyString(), anyString(), any(RepositoryCallback.class));
+
         m_oLoginLogic.attemptLogin(username, password);
 
         verify(view).clearErrors();
         verify(view).showProgress(true);
-        verify(view).SendLoginAttempt(eq(username), eq(password));
+        verify(repository).SendLoginAttempt(eq(username), eq(password), any(RepositoryCallback.class));
+        verify(view).launchNextActivity();
+        verify(view).showProgress(false);
+    }
+
+    @Test
+    public void login_validCredentials_SendLoginAttemptIsCalledButFailed() {
+        String username = "zak";
+        String password = "111111";
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                RepositoryCallback callback = invocation.getArgument(2);
+                callback.onError(new VolleyError());
+                return null;
+            }
+        }).when(repository).SendLoginAttempt(anyString(), anyString(), any(RepositoryCallback.class));
+
+        m_oLoginLogic.attemptLogin(username, password);
+
+        verify(repository).SendLoginAttempt(eq(username), eq(password), any(RepositoryCallback.class));
+        verify(view).showError(anyString());
+        verify(view).showProgress(false);
     }
 }
