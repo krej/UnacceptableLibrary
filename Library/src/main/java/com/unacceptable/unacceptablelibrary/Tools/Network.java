@@ -108,7 +108,7 @@ public class Network {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
 
-                params.put("Content-Type", "application/json");
+                //params.put("Content-Type", "application/json");
                 if (bAddAuthentication)
                     params.put("Authorization", "bearer " + Tools.GetAPIToken());
                 return params;
