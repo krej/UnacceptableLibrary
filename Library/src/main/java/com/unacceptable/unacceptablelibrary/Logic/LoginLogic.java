@@ -1,28 +1,30 @@
 package com.unacceptable.unacceptablelibrary.Logic;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.unacceptable.unacceptablelibrary.R;
-import com.unacceptable.unacceptablelibrary.Tools.Network;
+import com.unacceptable.unacceptablelibrary.Repositories.LoginRepository;
+import com.unacceptable.unacceptablelibrary.Repositories.LoginRepositoryImpl;
+import com.unacceptable.unacceptablelibrary.Repositories.RepositoryCallback;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public class LoginLogic extends BaseLogic<LoginLogic.View> {
+    LoginRepository repository;
+    SharedPreferences prefs;
+
+    public LoginLogic(LoginRepository repository, SharedPreferences prefs) {
+        this.repository = repository;
+        this.prefs = prefs;
+    }
 
     public void attemptLogin(String username, String password) {
         view.clearErrors();
+        sendLoginAttempt(username,password);
 
+        
         // Check for a valid username address.
         if (Tools.IsEmptyString(username)) {
             view.setUsernameError(view.getMyString(R.string.error_field_required));
@@ -46,8 +48,32 @@ public class LoginLogic extends BaseLogic<LoginLogic.View> {
         }
 
         view.showProgress(true);
-        view.SendLoginAttempt(username, password);
+        sendLoginAttempt(username, password);
 
+    }
+
+    private void sendLoginAttempt(final String username, final String password) {
+        repository.SendLoginAttempt(username, password, new RepositoryCallback() {
+            @Override
+            public void onSuccess(String s) {
+                saveAPIToken(s);
+                view.launchNextActivity();
+                view.showProgress(false);
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                view.showError("Failed to login: " + error.getMessage());
+                view.showProgress(false);
+            }
+        });
+    }
+
+    private void saveAPIToken(String response) {
+        SharedPreferences.Editor editor = prefs.edit();
+        String token = response.substring(1, response.length() - 1); //response comes back with quotes on both sides - toss em out
+        editor.putString("APIToken", token);
+        editor.commit();
     }
 
     private boolean isValidUsername(String username) {
@@ -67,6 +93,7 @@ public class LoginLogic extends BaseLogic<LoginLogic.View> {
         void sendFocusToUsername();
         String getMyString(int id);
         void showProgress(final boolean show);
-        void SendLoginAttempt(final String username, final String password);
+        void showError(String sMessage);
+        void launchNextActivity();
     }
 }
