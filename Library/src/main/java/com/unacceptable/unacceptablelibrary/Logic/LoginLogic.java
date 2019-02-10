@@ -22,9 +22,7 @@ public class LoginLogic extends BaseLogic<LoginLogic.View> {
 
     public void attemptLogin(String username, String password) {
         view.clearErrors();
-        sendLoginAttempt(username,password);
 
-        
         // Check for a valid username address.
         if (Tools.IsEmptyString(username)) {
             view.setUsernameError(view.getMyString(R.string.error_field_required));
