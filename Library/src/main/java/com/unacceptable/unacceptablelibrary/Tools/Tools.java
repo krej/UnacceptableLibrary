@@ -18,6 +18,7 @@ import java.io.StringReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -63,7 +64,7 @@ public class Tools {
     }
 
     //TODO: Put a setting in the app for this
-    public static DatabaseServer Server = DatabaseServer.BeerNet;
+    public static DatabaseServer Server = DatabaseServer.Desktop;
 
     enum DatabaseServer {
         Desktop {
@@ -151,5 +152,24 @@ public class Tools {
 
     public static boolean IsEmptyString(String str) {
         return str == null || str.length() == 0;
+    }
+
+    public static boolean CompareDatesWithoutTime(Date d1, Date d2) {
+        d1 = setTimeToMidnight(d1);
+        d2 = setTimeToMidnight(d2);
+        boolean result = d2.compareTo(d1) == 0;
+        return result;
+    }
+
+    public static Date setTimeToMidnight(Date date) {
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.setTime( date );
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        return calendar.getTime();
     }
 }

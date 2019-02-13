@@ -1,21 +1,19 @@
 package com.unacceptable.unacceptablelibrary.Logic;
 
 import android.content.SharedPreferences;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.unacceptable.unacceptablelibrary.R;
-import com.unacceptable.unacceptablelibrary.Repositories.LoginRepository;
-import com.unacceptable.unacceptablelibrary.Repositories.LoginRepositoryImpl;
+import com.unacceptable.unacceptablelibrary.Repositories.ILoginRepository;
 import com.unacceptable.unacceptablelibrary.Repositories.RepositoryCallback;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 
 public class LoginLogic extends BaseLogic<LoginLogic.View> {
-    LoginRepository repository;
+    ILoginRepository repository;
     SharedPreferences prefs;
 
-    public LoginLogic(LoginRepository repository, SharedPreferences prefs) {
+    public LoginLogic(ILoginRepository repository, SharedPreferences prefs) {
         this.repository = repository;
         this.prefs = prefs;
     }

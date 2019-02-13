@@ -4,13 +4,11 @@ import android.content.SharedPreferences;
 
 import com.android.volley.VolleyError;
 import com.unacceptable.unacceptablelibrary.Logic.LoginLogic;
-import com.unacceptable.unacceptablelibrary.Repositories.LoginRepository;
+import com.unacceptable.unacceptablelibrary.Repositories.ILoginRepository;
 import com.unacceptable.unacceptablelibrary.Repositories.RepositoryCallback;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -28,13 +26,13 @@ import static org.mockito.Mockito.when;
 public class LoginTests {
     private LoginLogic m_oLoginLogic;
     private LoginLogic.View view;
-    private LoginRepository repository;
+    private ILoginRepository repository;
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
 
     @Before
     public void setup() {
-        repository = mock(LoginRepository.class);
+        repository = mock(ILoginRepository.class);
         prefs = mock(SharedPreferences.class);
         editor = mock(SharedPreferences.Editor.class);
         m_oLoginLogic = new LoginLogic(repository, prefs);

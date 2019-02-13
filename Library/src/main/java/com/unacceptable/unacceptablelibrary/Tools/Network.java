@@ -9,6 +9,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.unacceptable.unacceptablelibrary.Repositories.RepositoryCallback;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -115,6 +116,26 @@ public class Network {
             }
         };
         Network.getInstance(mCtx).addToRequestQueue(request);
+    }
+
+    public static void WebRequest(int method, String url, final byte[] data, final RepositoryCallback callback, final boolean bAddAuthentication) {
+        WebRequest(method, url, data,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null) {
+                            callback.onSuccess(response);
+                        } else {
+                            callback.onError(null);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        callback.onError(error);
+                    }
+                }, bAddAuthentication);
     }
 
 }

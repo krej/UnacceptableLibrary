@@ -5,11 +5,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,19 +18,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.unacceptable.unacceptablelibrary.Logic.LoginLogic;
 import com.unacceptable.unacceptablelibrary.R;
-import com.unacceptable.unacceptablelibrary.Repositories.LoginRepositoryImpl;
-import com.unacceptable.unacceptablelibrary.Tools.Network;
+import com.unacceptable.unacceptablelibrary.Repositories.LoginRepository;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A login screen that offers login via email/password.
@@ -54,7 +43,7 @@ public class LoginActivity extends AppCompatActivity implements LoginLogic.View 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        m_oLoginLogic = new LoginLogic(new LoginRepositoryImpl(), getSharedPreferences("Prefs", Context.MODE_PRIVATE));
+        m_oLoginLogic = new LoginLogic(new LoginRepository(), getSharedPreferences("Prefs", Context.MODE_PRIVATE));
 
         m_oLoginLogic.attachView(this);
 

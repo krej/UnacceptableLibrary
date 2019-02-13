@@ -1,6 +1,6 @@
 package com.unacceptable.unacceptablelibrary.Logic;
 
-abstract class BaseLogic<V> {
+public abstract class BaseLogic<V> {
 
     protected V view;
 
