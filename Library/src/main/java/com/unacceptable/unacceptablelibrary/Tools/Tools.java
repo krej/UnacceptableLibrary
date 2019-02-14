@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
@@ -29,6 +30,7 @@ import java.util.Locale;
 public class Tools {
 
     public static SharedPreferences m_sharedPrefs;
+    public static SharedPreferences m_Settings;
     public static String m_sAPISubName; //TODO: Should i save this elsewhere? In shared prefs? probably?
 
     public static double ParseDouble(String d) {
@@ -52,6 +54,7 @@ public class Tools {
 
     public static boolean LoadSharedPrefs(Context ctx, String sAPISubName) {
         m_sharedPrefs = ctx.getSharedPreferences("Prefs", Context.MODE_PRIVATE);
+        m_Settings = PreferenceManager.getDefaultSharedPreferences(ctx);
         //return m_sharedPrefs != null;
         if (m_sharedPrefs == null) {
             Tools.ShowToast(ctx, "Failed to load preferences", Toast.LENGTH_SHORT);
@@ -63,8 +66,24 @@ public class Tools {
         return true;
     }
 
-    //TODO: Put a setting in the app for this
-    public static DatabaseServer Server = DatabaseServer.Desktop;
+    public static DatabaseServer Server() {
+        int iServer;
+        try {
+            iServer = m_Settings.getInt("apiServer", 0);
+        } catch (Exception ex) {
+            String sServer = m_Settings.getString("apiServer", "0");
+            iServer = ParseInt(sServer);
+        }
+
+        switch (iServer) {
+            case 0:
+                return DatabaseServer.Desktop;
+            case 1:
+                return DatabaseServer.BeerNet;
+        }
+
+        return DatabaseServer.Desktop;
+    }
 
     enum DatabaseServer {
         Desktop {
@@ -93,14 +112,14 @@ public class Tools {
             return "http://192.168.1.11:50421/beernet";
 
         return "http://rest.unacceptable.beer:2403";*/
-        return Server.toString() + m_sAPISubName;
+        return Server().toString() + m_sAPISubName;
     }
 
     public static String HealthAPIURL() {
-        return Server.toString() + "health";
+        return Server().toString() + "health";
     }
 
-    public static String BeerNetAPIURL() {return Server.toString() + "beernet"; }
+    public static String BeerNetAPIURL() {return Server().toString() + "beernet"; }
 
 
     public static String SanitizeDeploydJSON(String response) {

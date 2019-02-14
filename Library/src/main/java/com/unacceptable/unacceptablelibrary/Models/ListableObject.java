@@ -26,7 +26,7 @@ public class ListableObject implements Serializable {
     }
 
     public void Save(ILibraryRepository repository) {
-        String sRecipeURL = Tools.RestAPIURL() + "/" + this.getClass().getSimpleName().toLowerCase() + "/";// "/recipe/";
+        String sRecipeURL = this.getClass().getSimpleName().toLowerCase() + "/";// "/recipe/";
         if ( idString != null && idString.length() > 0 ) {
             sRecipeURL += idString;
         }
