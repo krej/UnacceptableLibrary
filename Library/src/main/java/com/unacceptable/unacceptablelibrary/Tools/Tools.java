@@ -29,9 +29,7 @@ import java.util.Locale;
 
 public class Tools {
 
-    public static SharedPreferences m_sharedPrefs;
-    public static SharedPreferences m_Settings;
-    public static String m_sAPISubName; //TODO: Should i save this elsewhere? In shared prefs? probably?
+
 
     public static double ParseDouble(String d) {
         if (d.length() == 0 ) return 0;
@@ -46,80 +44,6 @@ public class Tools {
         Toast t = Toast.makeText(c, text, length);
         t.show();
     }
-
-    public static String GetAPIToken() {
-        String APIToken = m_sharedPrefs.getString("APIToken", "");
-        return APIToken;
-    }
-
-    public static boolean LoadSharedPrefs(Context ctx, String sAPISubName) {
-        m_sharedPrefs = ctx.getSharedPreferences("Prefs", Context.MODE_PRIVATE);
-        m_Settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-        //return m_sharedPrefs != null;
-        if (m_sharedPrefs == null) {
-            Tools.ShowToast(ctx, "Failed to load preferences", Toast.LENGTH_SHORT);
-            return false;
-        }
-
-        m_sAPISubName = sAPISubName;
-
-        return true;
-    }
-
-    public static DatabaseServer Server() {
-        int iServer;
-        try {
-            iServer = m_Settings.getInt("apiServer", 0);
-        } catch (Exception ex) {
-            String sServer = m_Settings.getString("apiServer", "0");
-            iServer = ParseInt(sServer);
-        }
-
-        switch (iServer) {
-            case 0:
-                return DatabaseServer.Desktop;
-            case 1:
-                return DatabaseServer.BeerNet;
-        }
-
-        return DatabaseServer.Desktop;
-    }
-
-    enum DatabaseServer {
-        Desktop {
-            public String toString() {
-                return "http://192.168.1.13:50421/";
-            }
-        },
-
-        Deployd {
-            public String toString() {
-                return "http://rest.unacceptable.beer:2403";
-            }
-        },
-
-        BeerNet {
-            public String toString() {
-                return "http://rest.unacceptable.beer:5123/";
-            }
-        }
-
-    }
-
-    //TODO: I don't really like having these here but they work for now...
-    public static String RestAPIURL() {
-        /*if (UseTestServer)
-            return "http://192.168.1.11:50421/beernet";
-
-        return "http://rest.unacceptable.beer:2403";*/
-        return Server().toString() + m_sAPISubName;
-    }
-
-    public static String HealthAPIURL() {
-        return Server().toString() + "health";
-    }
-
-    public static String BeerNetAPIURL() {return Server().toString() + "beernet"; }
 
 
     public static String SanitizeDeploydJSON(String response) {
@@ -152,7 +76,7 @@ public class Tools {
     }
 
     public static Boolean LoginTokenExists(Activity ctx, Class<?> cNextActivity) {
-        if (Tools.GetAPIToken().length() > 0) return true;
+        if (Preferences.GetAPIToken().length() > 0) return true;
 
         LaunchSignInScreen(ctx, cNextActivity);
         return false;
