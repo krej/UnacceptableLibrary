@@ -4,12 +4,12 @@ import com.google.gson.annotations.Expose;
 
 public class Response {
     @Expose
-    boolean success;
+    boolean Success;
     @Expose
-    String message;
+    String Message;
 
     public Response(boolean success, String message) {
-        this.success = success;
-        this.message = message;
+        this.Success = success;
+        this.Message = message;
     }
 }

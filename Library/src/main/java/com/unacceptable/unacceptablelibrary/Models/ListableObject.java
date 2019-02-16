@@ -7,7 +7,7 @@ import com.google.gson.annotations.Expose;
 import com.unacceptable.unacceptablelibrary.Repositories.ILibraryRepository;
 import com.unacceptable.unacceptablelibrary.Repositories.LibraryRepository;
 import com.unacceptable.unacceptablelibrary.Repositories.RepositoryCallback;
-import com.unacceptable.unacceptablelibrary.Tools.Tools;
+
 import java.io.Serializable;
 
 /**
@@ -38,9 +38,9 @@ public class ListableObject implements Serializable {
                 GsonBuilder gsonBuilder = new GsonBuilder();
                 Gson gson = gsonBuilder.create();
                 com.unacceptable.unacceptablelibrary.Models.Response res = gson.fromJson(response, com.unacceptable.unacceptablelibrary.Models.Response.class);
-                if (res.success) {
-                    //TODO: Verify that responses are always idString when success.
-                    idString = res.message;
+                if (res.Success) {
+                    //TODO: Verify that responses are always idString when Success.
+                    idString = res.Message;
                 }
             }
 
