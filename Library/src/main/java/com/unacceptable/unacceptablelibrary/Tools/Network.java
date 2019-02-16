@@ -21,6 +21,7 @@ import java.util.Map;
 public class Network {
     private static Network mInstance;
     private RequestQueue mRequestQueue;
+    //TODO: Get rid of this context because maybe this is the reason why Instant Run doesn't work well... it does warn about that...
     private static Context mCtx;
 
     private Network(Context context) {
