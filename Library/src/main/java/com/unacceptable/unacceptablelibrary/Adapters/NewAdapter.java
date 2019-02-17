@@ -20,9 +20,11 @@ import com.unacceptable.unacceptablelibrary.Models.ListableObject;
  * Created by zak on 11/16/2016.
  */
 
-public abstract class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>
-implements View.OnClickListener
+//This is going to be the new adapter to replace the old one
+public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
+        implements View.OnClickListener
 {
+    protected BaseAdapterViewControl m_vControl;
 
     protected ArrayList<ListableObject> m_Dataset;
     protected int m_iLayout;
@@ -30,17 +32,18 @@ implements View.OnClickListener
     protected int m_iClickedItem;
     protected LayoutInflater inflater;
 
-    public Adapter(int iLayout, int iDialogLayout) {
-        this(iLayout, iDialogLayout, true);
+    public NewAdapter(int iLayout, int iDialogLayout) {
+        this(iLayout, iDialogLayout, true, null);
     }
 
-
-    public Adapter(int iLayout, int iDialogLayout, boolean bAddEmpty) {
+    public NewAdapter(int iLayout, int iDialogLayout, boolean bAddEmpty, BaseAdapterViewControl viewControl) {
         m_Dataset = new ArrayList<ListableObject>();
         m_iLayout = iLayout;
         m_iDialogLayout = iDialogLayout;
         if (bAddEmpty)
             add(new ListableObject());
+        m_vControl = viewControl;
+        m_vControl.attachAdapter(this);
     }
 
 
@@ -54,6 +57,11 @@ implements View.OnClickListener
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        if (OnlyEmptyIngredientExists()) return;
+
+        ListableObject i = (ListableObject) m_Dataset.get(position);
+        m_vControl.SetupViewInList(holder, i);
+
         //final String name = mDataset.get(position).Name;
         //holder.txtHeader.setText(m_Dataset.get(position).Name);
         /*holder.txtHeader.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +108,9 @@ implements View.OnClickListener
         return (m_Dataset.size() == 1 && m_Dataset.get(0).toString() == "Empty");
     }
 
-    protected abstract boolean AddItem(Dialog d, boolean bExisting, String sExtraData);
+    protected boolean AddItem(Dialog d, boolean bExisting, String sExtraData) {
+        return false;
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView txtHeader;
@@ -128,7 +138,8 @@ implements View.OnClickListener
                     //Toast.makeText(v.getContext(), "Test" + getLayoutPosition(), Toast.LENGTH_LONG).show();
                     m_iClickedItem = getLayoutPosition();
                     if (size() > 0) {
-                        AddItem(v.getContext(), m_Dataset.get(m_iClickedItem));
+                        //AddItem(v.getContext(), m_Dataset.get(m_iClickedItem));
+                        m_vControl.onItemClick(v, m_Dataset.get(m_iClickedItem));
                     }
                 }
             });
@@ -159,7 +170,7 @@ implements View.OnClickListener
         //m_iClickedItem =
     }
 
-    public void AddItem(final Context c, ListableObject i) {
+    public void showAddItemDialog(final Context c, final ListableObject i) {
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
         //builder.setView(m_iDialogLayout);
         final boolean bExisting = i != null;
@@ -192,7 +203,8 @@ implements View.OnClickListener
                     n = (RecipeEditor) c;
                     bRecipeEditor = true;
                 }*/
-                if (!AddItem(dialog, bExisting, sExtraInfo)) return;
+                if (!m_vControl.onDialogOkClicked(dialog, i)) return;
+                //if (!AddItem(dialog, bExisting, sExtraInfo)) return;
 
                 if (bRecipeEditor) {
                     //n.RefreshStats();
@@ -207,10 +219,12 @@ implements View.OnClickListener
 
         LayoutInflater inflater = (LayoutInflater)c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View root = inflater.inflate(m_iDialogLayout, null);
+        if (i != null)
+            m_vControl.SetupDialog(root, i);
         return root;
     }
 
-    protected void InfoMissing(Context c) {
+    public void InfoMissing(Context c) {
         CharSequence text = "Info Missing";
         Toast t = Toast.makeText(c, text, Toast.LENGTH_SHORT);
         t.show();
