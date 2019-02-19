@@ -21,6 +21,8 @@ import android.widget.Toast;
 import com.unacceptable.unacceptablelibrary.Logic.LoginLogic;
 import com.unacceptable.unacceptablelibrary.R;
 import com.unacceptable.unacceptablelibrary.Repositories.LoginRepository;
+import com.unacceptable.unacceptablelibrary.Tools.Network;
+import com.unacceptable.unacceptablelibrary.Tools.Preferences;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 /**
@@ -75,6 +77,8 @@ public class LoginActivity extends AppCompatActivity implements LoginLogic.View 
 
         Intent i = getIntent();
         m_cNextActivity = (Class<?>)i.getSerializableExtra("NextActivity");
+
+        Network.getInstance(this);
     }
 
     private void passCredentialsToLogin() {

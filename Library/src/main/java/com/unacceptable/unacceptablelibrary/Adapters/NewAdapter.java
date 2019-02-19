@@ -62,7 +62,7 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
         if (OnlyEmptyIngredientExists()) return;
 
         ListableObject i = (ListableObject) m_Dataset.get(position);
-        m_vControl.SetupViewInList(holder, i);
+        m_vControl.SetupViewInList(holder, i, position);
 
         //final String name = mDataset.get(position).Name;
         //holder.txtHeader.setText(m_Dataset.get(position).Name);

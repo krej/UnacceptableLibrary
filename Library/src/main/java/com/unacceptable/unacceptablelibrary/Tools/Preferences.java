@@ -77,7 +77,7 @@ public class Preferences {
     enum DatabaseServer {
         Desktop {
             public String toString() {
-                return "http://192.168.1.13:50421/";
+                return "http://192.168.1.10:50421/";
             }
         },
 
