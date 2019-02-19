@@ -24,22 +24,24 @@ import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
         implements View.OnClickListener
 {
-    protected BaseAdapterViewControl m_vControl;
+    protected IAdapterViewControl m_vControl;
 
     protected ArrayList<ListableObject> m_Dataset;
     protected int m_iLayout;
     protected int m_iDialogLayout;
     protected int m_iClickedItem;
     protected LayoutInflater inflater;
+    private boolean m_bAddEmptyItem;
 
     public NewAdapter(int iLayout, int iDialogLayout) {
         this(iLayout, iDialogLayout, true, null);
     }
 
-    public NewAdapter(int iLayout, int iDialogLayout, boolean bAddEmpty, BaseAdapterViewControl viewControl) {
+    public NewAdapter(int iLayout, int iDialogLayout, boolean bAddEmpty, IAdapterViewControl viewControl) {
         m_Dataset = new ArrayList<ListableObject>();
         m_iLayout = iLayout;
         m_iDialogLayout = iDialogLayout;
+        m_bAddEmptyItem = bAddEmpty;
         if (bAddEmpty)
             add(new ListableObject());
         m_vControl = viewControl;
@@ -102,6 +104,11 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
         int position = m_Dataset.indexOf(item);
         m_Dataset.remove(position);
         notifyItemRemoved(position);
+        /*if (m_bAddEmptyItem) {
+            add(new ListableObject());
+            notifyDataSetChanged();
+        }*/
+
     }
 
     protected boolean OnlyEmptyIngredientExists() {
@@ -194,21 +201,9 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
 
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //TODO: 1/27/19 - I moved this Adapter class to the shared Module so it can no longer access RecipeEditor... I'm fine with this... Brewzilla can override the adapter if needed
-                //RecipeEditor n = null;
-                boolean bRecipeEditor = false;
-                String sExtraInfo = "";
-                //TODO: Make better. I added it when working on the Ingredient Manager
-                /*if (c.getClass() == RecipeEditor.class) {
-                    n = (RecipeEditor) c;
-                    bRecipeEditor = true;
-                }*/
-                if (!m_vControl.onDialogOkClicked(dialog, i)) return;
-                //if (!AddItem(dialog, bExisting, sExtraInfo)) return;
 
-                if (bRecipeEditor) {
-                    //n.RefreshStats();
-                }
+                if (!m_vControl.onDialogOkClicked(dialog, i)) return;
+
                 notifyDataSetChanged();
                 dialog.dismiss();
             }
@@ -219,8 +214,10 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
 
         LayoutInflater inflater = (LayoutInflater)c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View root = inflater.inflate(m_iDialogLayout, null);
+
         if (i != null)
             m_vControl.SetupDialog(root, i);
+
         return root;
     }
 
