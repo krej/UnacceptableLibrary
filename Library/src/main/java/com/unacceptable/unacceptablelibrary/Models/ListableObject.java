@@ -21,6 +21,14 @@ public class ListableObject implements Serializable {
     public String idString;
     //protected String ClassName = ""; //Used for the API to know what URL to request to. Could maybe be replaced with just getting the class name later.
 
+    public ListableObject(String sName) {
+        name = sName;
+    }
+
+    public ListableObject() {
+
+    }
+
     public void Save() {
         Save(new LibraryRepository());
     }

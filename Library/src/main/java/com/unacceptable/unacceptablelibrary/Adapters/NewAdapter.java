@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,7 +63,16 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
         if (OnlyEmptyIngredientExists()) return;
 
         ListableObject i = (ListableObject) m_Dataset.get(position);
-        m_vControl.SetupViewInList(holder, i, position);
+        m_vControl.SetupViewInList(holder, i);
+
+        if (m_vControl.AlternateRowColors()) {
+            if (position % 2 == 0) {
+                holder.view.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            } else {
+                //view.view.setBackgroundColor(Color.parseColor("#208f82"));
+                holder.view.setBackgroundColor(Color.parseColor(m_vControl.GetAlternateRowBackgroundColor()));
+            }
+        }
 
         //final String name = mDataset.get(position).Name;
         //holder.txtHeader.setText(m_Dataset.get(position).Name);

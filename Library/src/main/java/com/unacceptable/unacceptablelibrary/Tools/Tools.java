@@ -9,6 +9,8 @@ import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -114,5 +116,12 @@ public class Tools {
         calendar.set(Calendar.MILLISECOND, 0);
 
         return calendar.getTime();
+    }
+
+    //TODO: Need to handle this returning a Response object
+    public static <T> T convertJsonResponseToObject(String json, Class<T> c) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+        return gson.fromJson(json, c);
     }
 }
