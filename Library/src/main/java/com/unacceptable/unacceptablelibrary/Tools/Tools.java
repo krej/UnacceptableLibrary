@@ -6,11 +6,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.unacceptable.unacceptablelibrary.Adapters.IAdapterViewControl;
+import com.unacceptable.unacceptablelibrary.Adapters.NewAdapter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -123,5 +127,19 @@ public class Tools {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
         return gson.fromJson(json, c);
+    }
+
+    public static NewAdapter setupRecyclerView(RecyclerView recyclerView, Context context, int iItemLayout, int iDialogLayout, boolean bAddEmpty, IAdapterViewControl adapterViewControl) {
+        recyclerView.setHasFixedSize(false);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+
+        NewAdapter adapter = new NewAdapter(iItemLayout, iDialogLayout, bAddEmpty, adapterViewControl);
+
+        recyclerView.setAdapter(adapter);
+
+        return adapter;
     }
 }

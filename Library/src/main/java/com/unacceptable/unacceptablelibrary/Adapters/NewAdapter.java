@@ -243,6 +243,11 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
 
     public void clear() {
         m_Dataset.clear();
-        add(new ListableObject());
+        if ( m_bAddEmptyItem) add(new ListableObject());
+        notifyDataSetChanged();
+    }
+
+    public IAdapterViewControl getAdapterViewControl() {
+        return m_vControl;
     }
 }
