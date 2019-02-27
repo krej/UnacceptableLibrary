@@ -142,4 +142,18 @@ public class Tools {
 
         return adapter;
     }
+
+    public static Calendar createDate(int month, int day, int year, int hour, int minute, int second) {
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, second);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar;
+    }
+
 }
