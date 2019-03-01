@@ -11,6 +11,7 @@ public interface IAdapterViewControl {
     void SetupDialog(View root, ListableObject i);
     void SetupViewInList(NewAdapter.ViewHolder view, ListableObject i);
     void onItemClick(View v, ListableObject i);
+    void onItemLongPress(View v, ListableObject i);
     boolean onDialogOkClicked(Dialog d, ListableObject i);
 
     void attachAdapter(NewAdapter adapter);

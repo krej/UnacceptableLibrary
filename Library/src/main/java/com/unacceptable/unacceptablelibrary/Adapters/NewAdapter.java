@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import com.unacceptable.unacceptablelibrary.R;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
+import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 /**
  * Created by zak on 11/16/2016.
@@ -23,7 +24,7 @@ import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 
 //This is going to be the new adapter to replace the old one
 public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
-        implements View.OnClickListener
+        //implements View.OnClickListener, View.OnLongClickListener
 {
     protected IAdapterViewControl m_vControl;
 
@@ -129,6 +130,11 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
         return false;
     }
 
+    /*@Override
+    public boolean onLongClick(View v) {
+        return false;
+    }*/
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView txtHeader;
         public TextView txtFooter;
@@ -160,6 +166,14 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
                     }
                 }
             });
+
+            v.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    m_vControl.onItemLongPress(v, m_Dataset.get(getLayoutPosition()));
+                    return false;
+                }
+            });
         }
     }
 
@@ -181,11 +195,11 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
         return m_Dataset;
     }
 
-    @Override
+    /*@Override
     public void onClick(View v) {
         //Toast.makeText(context, String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
         //m_iClickedItem =
-    }
+    }*/
 
     public void showAddItemDialog(final Context c, final ListableObject i) {
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
