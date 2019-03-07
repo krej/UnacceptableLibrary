@@ -39,6 +39,10 @@ public class Preferences {
         return APIToken;
     }
 
+    public static boolean ServerSettingExists() {
+        return m_Settings.contains("apiServer");
+    }
+
     public static DatabaseServer Server() {
         int iServer;
         try {
