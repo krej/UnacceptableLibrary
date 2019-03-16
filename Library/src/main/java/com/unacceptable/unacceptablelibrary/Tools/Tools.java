@@ -23,11 +23,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Created by zak on 11/16/2016.
@@ -96,6 +98,7 @@ public class Tools {
 
     public static String FormatDate(Date dt, String format) {
         DateFormat dateFormat = new SimpleDateFormat(format, Locale.ENGLISH);
+        dateFormat.setTimeZone(Calendar.getInstance().getTimeZone());
         return dateFormat.format(dt);
     }
 
@@ -108,6 +111,19 @@ public class Tools {
         d2 = setTimeToMidnight(d2);
         boolean result = d2.compareTo(d1) == 0;
         return result;
+    }
+
+    public static Date setTimeToMidnightUTC(Date date) {
+        Date dt = setTimeToMidnight(date);
+        return  dateToUTC(dt);
+    }
+
+    public static Date dateFromUTC(Date date){
+        return new Date(date.getTime() + Calendar.getInstance().getTimeZone().getOffset(date.getTime()));
+    }
+
+    public static Date dateToUTC(Date date){
+        return new Date(date.getTime() - Calendar.getInstance().getTimeZone().getOffset(date.getTime()));
     }
 
     public static Date setTimeToMidnight(Date date) {
