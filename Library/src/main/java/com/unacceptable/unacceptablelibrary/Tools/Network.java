@@ -125,6 +125,18 @@ public class Network {
                     @Override
                     public void onResponse(String response) {
                         if (response != null) {
+                            /*try {
+                                com.unacceptable.unacceptablelibrary.Models.Response result = Tools.convertJsonResponseToObject(response, com.unacceptable.unacceptablelibrary.Models.Response.class);
+                                if (!result.Success) {
+                                    callback.onError(new VolleyError(result.Message));
+                                    return;
+                                }
+                            } catch ( Exception ex) {
+                                //TODO: THIS ISN'T GREAT!!! I'm only doing this because not all calls to the API are in a Response format. I want to change that...
+                                callback.onSuccess(response);
+                                return;
+                            }*/
+
                             callback.onSuccess(response);
                         } else {
                             callback.onError(null);
