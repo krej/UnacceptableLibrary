@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 
+import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.unacceptable.unacceptablelibrary.Adapters.IAdapterViewControl;
@@ -38,7 +39,7 @@ import java.util.TimeZone;
 
 public class Tools {
 
-
+    public static int SAMSUNG_CURVED_SCREEN_PADDING = 25;
 
     public static double ParseDouble(String d) {
         if (d.length() == 0 ) return 0;
@@ -151,8 +152,11 @@ public class Tools {
         return setupRecyclerView(recyclerView, context, iItemLayout, iDialogLayout, bAddEmpty, adapterViewControl, false);
     }
 
-    public static NewAdapter setupRecyclerView(RecyclerView recyclerView, Context context, int iItemLayout, int iDialogLayout, boolean bAddEmpty, IAdapterViewControl adapterViewControl,
-                                               boolean bAddDividerLine) {
+    public static NewAdapter setupRecyclerView(RecyclerView recyclerView, Context context, int iItemLayout, int iDialogLayout, boolean bAddEmpty, IAdapterViewControl adapterViewControl, boolean bAddDividerLine) {
+        return setupRecyclerView(recyclerView, context, iItemLayout, iDialogLayout, bAddEmpty, adapterViewControl, bAddDividerLine, false);
+    }
+
+    public static NewAdapter setupRecyclerView(RecyclerView recyclerView, Context context, int iItemLayout, int iDialogLayout, boolean bAddEmpty, IAdapterViewControl adapterViewControl, boolean bAddDividerLine, boolean bAddHorizontalSpacing) {
         recyclerView.setHasFixedSize(false);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
@@ -166,6 +170,10 @@ public class Tools {
         if (bAddDividerLine) {
             DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
             recyclerView.addItemDecoration(dividerItemDecoration);
+        }
+
+        if (bAddHorizontalSpacing) {
+            recyclerView.addItemDecoration(new HoriztonalSpaceItemDecoration(Tools.SAMSUNG_CURVED_SCREEN_PADDING));
         }
 
         return adapter;
@@ -184,4 +192,17 @@ public class Tools {
         return calendar;
     }
 
+    public static String ParseVolleyError(VolleyError error) {
+        String sMessage;
+
+        int iStatusCode = error.networkResponse.statusCode;
+        if (iStatusCode != 200) {
+            sMessage = "Error: Response Code: " + String.valueOf(iStatusCode);
+        } else {
+            //error.networkResponse.
+            sMessage = "Error: " + error.getMessage();
+        }
+
+        return sMessage;
+    }
 }

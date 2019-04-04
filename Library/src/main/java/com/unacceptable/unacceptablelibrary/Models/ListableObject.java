@@ -32,9 +32,12 @@ public class ListableObject implements Serializable {
     public void Save() {
         Save(new LibraryRepository());
     }
-
     public void Save(ILibraryRepository repository) {
-        String sRecipeURL = this.getClass().getSimpleName().toLowerCase() + "/";// "/recipe/";
+        Save(repository, this.getClass().getSimpleName().toLowerCase());
+    }
+
+    public void Save(ILibraryRepository repository, String sCollectionName) {
+        String sRecipeURL = sCollectionName + "/";// "/recipe/";
         if ( idString != null && idString.length() > 0 ) {
             sRecipeURL += idString;
         }
@@ -59,7 +62,6 @@ public class ListableObject implements Serializable {
             }
         });
     }
-
 
     public byte[] BuildRestData() {
         //GsonBuilder gsonBuilder = new GsonBuilder().setExclusionStrategies(new JsonExclusion());
