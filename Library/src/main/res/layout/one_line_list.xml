@@ -10,5 +10,6 @@
         android:layout_height="wrap_content"
         android:paddingBottom="15dp"
         android:paddingTop="15dp"
+        android:paddingHorizontal="10dp"
         android:background="?attr/selectableItemBackground"/>
 </LinearLayout>
