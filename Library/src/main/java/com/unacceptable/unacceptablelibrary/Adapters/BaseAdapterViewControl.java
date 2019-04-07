@@ -1,11 +1,15 @@
 package com.unacceptable.unacceptablelibrary.Adapters;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 
-public abstract class BaseAdapterViewControl implements IAdapterViewControl {
+import java.io.Serializable;
+
+public abstract class BaseAdapterViewControl implements IAdapterViewControl, Serializable {
     protected NewAdapter m_Adapter;
     protected boolean m_bAlternateRowColors;
     protected String m_sAlternateRowBackgroundColor;
@@ -24,5 +28,13 @@ public abstract class BaseAdapterViewControl implements IAdapterViewControl {
 
     public String GetAlternateRowBackgroundColor() {
         return m_sAlternateRowBackgroundColor;
+    }
+
+    public boolean AddItemUsesActivity() {
+        return false;
+    }
+
+    public Intent SetupNewActivity(Context c, ListableObject i) {
+        return null;
     }
 }

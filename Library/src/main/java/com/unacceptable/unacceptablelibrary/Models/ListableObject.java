@@ -33,7 +33,7 @@ public class ListableObject implements Serializable {
         Save(new LibraryRepository());
     }
     public void Save(ILibraryRepository repository) {
-        Save(repository, this.getClass().getSimpleName().toLowerCase());
+        Save(repository, getSingularName());
     }
 
     public void Save(ILibraryRepository repository, String sCollectionName) {
@@ -74,5 +74,11 @@ public class ListableObject implements Serializable {
     public String toString() {
         return name;
     }
+
+    public String getSingularName() {
+        return this.getClass().getSimpleName().toLowerCase();
+    }
+
+
 
 }

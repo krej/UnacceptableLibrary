@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,7 +17,6 @@ import java.util.ArrayList;
 
 import com.unacceptable.unacceptablelibrary.R;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
-import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 /**
  * Created by zak on 11/16/2016.
@@ -195,16 +195,18 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
         return m_Dataset;
     }
 
-    /*@Override
-    public void onClick(View v) {
-        //Toast.makeText(context, String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
-        //m_iClickedItem =
-    }*/
-
     public void showAddItemDialog(final Context c, final ListableObject i) {
+        if (m_vControl.AddItemUsesActivity()) {
+            Intent intent = m_vControl.SetupNewActivity(c, i);
+            if (intent != null)
+                c.startActivity(intent);
+        } else {
+            startDialog(c, i);
+        }
+    }
+
+    private void startDialog(final Context c, final ListableObject i) {
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
-        //builder.setView(m_iDialogLayout);
-        final boolean bExisting = i != null;
 
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -239,7 +241,7 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
         LayoutInflater inflater = (LayoutInflater)c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View root = inflater.inflate(m_iDialogLayout, null);
 
-        if (i != null)
+        //if (i != null)
             m_vControl.SetupDialog(root, i);
 
         return root;
