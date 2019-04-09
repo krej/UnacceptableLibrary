@@ -9,6 +9,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 
@@ -50,6 +53,14 @@ public class Tools {
     public static int ParseInt(String d) {
         if (d.length() == 0 ) return 0;
         return Integer.parseInt(d);
+    }
+
+    public static int ParseInt(EditText et) {
+        return Tools.ParseInt(et.getText().toString());
+    }
+
+    public static double ParseDouble(EditText et) {
+        return Tools.ParseDouble(et.getText().toString());
     }
 
     public static void ShowToast(Context c, CharSequence text, int length) {
@@ -213,5 +224,20 @@ public class Tools {
             ListableObject o = (ListableObject)l;
             adapter.add(o);
         }
+    }
+
+    public static <T> void PopulateDropDown(Spinner spinner, Context context, T[] data) {
+        ArrayAdapter<T> aa = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, data);
+        spinner.setAdapter(aa);
+    }
+
+    public static <T> ArrayList<T> ConvertToStrongTypedArrayList(ArrayList<ListableObject> dataset) {
+        ArrayList<T> list = new ArrayList<>();
+        for (ListableObject l : dataset) {
+            T exercisePlan = (T)l;
+            list.add(exercisePlan);
+        }
+
+        return list;
     }
 }

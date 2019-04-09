@@ -10,6 +10,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.unacceptable.unacceptablelibrary.Repositories.RepositoryCallback;
+import com.unacceptable.unacceptablelibrary.Repositories.RepositoryDataCallback;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -120,24 +121,26 @@ public class Network {
     }
 
     public static void WebRequest(int method, String url, final byte[] data, final RepositoryCallback callback, final boolean bAddAuthentication) {
+        WebRequest(method, url, data, callback, bAddAuthentication, false);
+    }
+
+    public static void WebRequest(int method, String url, final byte[] data, final RepositoryCallback callback, final boolean bAddAuthentication, final boolean bUsesResponseObject) {
         WebRequest(method, url, data,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         if (response != null) {
-                            /*try {
-                                com.unacceptable.unacceptablelibrary.Models.Response result = Tools.convertJsonResponseToObject(response, com.unacceptable.unacceptablelibrary.Models.Response.class);
-                                if (!result.Success) {
-                                    callback.onError(new VolleyError(result.Message));
-                                    return;
-                                }
-                            } catch ( Exception ex) {
-                                //TODO: THIS ISN'T GREAT!!! I'm only doing this because not all calls to the API are in a Response format. I want to change that...
-                                callback.onSuccess(response);
-                                return;
-                            }*/
 
-                            callback.onSuccess(response);
+                            if (bUsesResponseObject) {
+                                com.unacceptable.unacceptablelibrary.Models.Response r = Tools.convertJsonResponseToObject(response, com.unacceptable.unacceptablelibrary.Models.Response.class);
+                                if (r.Success) {
+                                    callback.onSuccess(r.Message);
+                                } else {
+                                    callback.onError(new VolleyError(r.Message));
+                                }
+                            } else {
+                                callback.onSuccess(response);
+                            }
                         } else {
                             callback.onError(null);
                         }
