@@ -123,7 +123,7 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
     }
 
     protected boolean OnlyEmptyIngredientExists() {
-        return (m_Dataset.size() == 1 && m_Dataset.get(0).toString() == "Empty");
+        return (m_Dataset.size() == 1 && m_Dataset.get(0).IsEmptyObject());
     }
 
     protected boolean AddItem(Dialog d, boolean bExisting, String sExtraData) {
@@ -208,6 +208,7 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
     private void startDialog(final Context c, final ListableObject i) {
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
 
+
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
             }
@@ -218,10 +219,9 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
             }
         });
 
-
-        builder.setView(SetupDialog(c, i));
+        View v = SetupDialog(c,i);
+        builder.setView(v);
         final AlertDialog dialog = builder.create();
-
 
         dialog.show();
 
@@ -241,8 +241,7 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
         LayoutInflater inflater = (LayoutInflater)c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View root = inflater.inflate(m_iDialogLayout, null);
 
-        //if (i != null)
-            m_vControl.SetupDialog(root, i);
+        m_vControl.SetupDialog(root, i);
 
         return root;
     }

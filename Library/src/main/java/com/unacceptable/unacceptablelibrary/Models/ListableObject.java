@@ -26,7 +26,6 @@ public class ListableObject implements Serializable {
     }
 
     public ListableObject() {
-
     }
 
     public void Save() {
@@ -79,6 +78,26 @@ public class ListableObject implements Serializable {
         return this.getClass().getSimpleName().toLowerCase();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (! (obj instanceof ListableObject)) return  false;
+        ListableObject o = (ListableObject)obj;
 
+        if (IsEmptyObject() && o.IsEmptyObject()) return true;
 
+        if (idString == null) {
+            return name.equals(o.name) && getSingularName().equals(o.getSingularName());
+        }
+        return idString.equals(o.idString) && name.equals(o.name) && getSingularName().equals(o.getSingularName());
+    }
+
+    @Override
+    public int hashCode() {
+        if (idString == null) return 0;
+        return idString.hashCode();
+    }
+
+    public boolean IsEmptyObject() {
+        return name.equals("Empty") && idString == null;
+    }
 }

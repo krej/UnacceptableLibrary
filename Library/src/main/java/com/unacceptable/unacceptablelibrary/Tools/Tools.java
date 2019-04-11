@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -32,6 +33,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -61,6 +63,10 @@ public class Tools {
 
     public static double ParseDouble(EditText et) {
         return Tools.ParseDouble(et.getText().toString());
+    }
+
+    public static void SetText(TextView textView, Object value) {
+        textView.setText(String.valueOf(value));
     }
 
     public static void ShowToast(Context c, CharSequence text, int length) {
@@ -231,6 +237,24 @@ public class Tools {
         spinner.setAdapter(aa);
     }
 
+
+    public static <T> void SetDropDownSelection(Spinner spinner, T[] dataset, T selectedObject) {
+        int position = FindPositionInArray(dataset, selectedObject);
+
+        spinner.setSelection(position);
+    }
+
+    public static <T> int FindPositionInArray(T[] dataset, T selectedObject) {
+        /*int position = 0;
+        for (T o : dataset) {
+            if (o.equals(selectedObject)) break;
+            position++;
+        }
+
+        return position;*/
+        return Arrays.asList(dataset).indexOf(selectedObject);
+    }
+
     public static <T> ArrayList<T> ConvertToStrongTypedArrayList(ArrayList<ListableObject> dataset) {
         ArrayList<T> list = new ArrayList<>();
         for (ListableObject l : dataset) {
@@ -240,4 +264,6 @@ public class Tools {
 
         return list;
     }
+
+
 }
