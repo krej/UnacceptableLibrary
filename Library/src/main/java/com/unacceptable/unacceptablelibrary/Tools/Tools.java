@@ -214,6 +214,9 @@ public class Tools {
     public static String ParseVolleyError(VolleyError error) {
         String sMessage;
 
+        if (error == null || error.networkResponse == null)
+            return "Null volley error";
+
         int iStatusCode = error.networkResponse.statusCode;
         if (iStatusCode != 200) {
             sMessage = "Error: Response Code: " + String.valueOf(iStatusCode);
