@@ -2,6 +2,8 @@ package com.unacceptable.unacceptablelibrary.Repositories;
 
 import android.os.SystemClock;
 
+import java.util.Date;
+
 public class TimeSource implements ITimeSource {
     @Override
     public long currentTimeMillis() {
@@ -11,5 +13,10 @@ public class TimeSource implements ITimeSource {
     @Override
     public long elapsedRealtime() {
         return SystemClock.elapsedRealtime();
+    }
+
+    @Override
+    public Date getTodaysDate() {
+        return new Date();
     }
 }
