@@ -66,6 +66,7 @@ public class Tools {
     }
 
     public static void SetText(TextView textView, Object value) {
+        if (value == null) value = "";
         textView.setText(String.valueOf(value));
     }
 
