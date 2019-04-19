@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -22,6 +23,7 @@ import com.google.gson.GsonBuilder;
 import com.unacceptable.unacceptablelibrary.Adapters.IAdapterViewControl;
 import com.unacceptable.unacceptablelibrary.Adapters.NewAdapter;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
+import com.unacceptable.unacceptablelibrary.Tools.RecyclerViewSwipe.SimpleItemTouchHelperCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -177,6 +179,10 @@ public class Tools {
     }
 
     public static NewAdapter setupRecyclerView(RecyclerView recyclerView, Context context, int iItemLayout, int iDialogLayout, boolean bAddEmpty, IAdapterViewControl adapterViewControl, boolean bAddDividerLine, boolean bAddHorizontalSpacing) {
+        return setupRecyclerView(recyclerView, context, iItemLayout, iDialogLayout, bAddEmpty, adapterViewControl, bAddDividerLine, bAddHorizontalSpacing, false);
+    }
+
+    public static NewAdapter setupRecyclerView(RecyclerView recyclerView, Context context, int iItemLayout, int iDialogLayout, boolean bAddEmpty, IAdapterViewControl adapterViewControl, boolean bAddDividerLine, boolean bAddHorizontalSpacing, boolean bAddSwipeGestures) {
         recyclerView.setHasFixedSize(false);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
@@ -194,6 +200,13 @@ public class Tools {
 
         if (bAddHorizontalSpacing) {
             recyclerView.addItemDecoration(new HoriztonalSpaceItemDecoration(Tools.SAMSUNG_CURVED_SCREEN_PADDING));
+        }
+
+        if (bAddSwipeGestures) {
+            ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+            ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+            adapter.attachTouchCallback(touchHelper);
+            touchHelper.attachToRecyclerView(recyclerView);
         }
 
         return adapter;

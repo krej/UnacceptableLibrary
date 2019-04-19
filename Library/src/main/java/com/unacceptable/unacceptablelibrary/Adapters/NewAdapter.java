@@ -6,17 +6,25 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import com.unacceptable.unacceptablelibrary.R;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
+import com.unacceptable.unacceptablelibrary.Tools.RecyclerViewSwipe.IItemTouchHelperAdapter;
+import com.unacceptable.unacceptablelibrary.Tools.RecyclerViewSwipe.OnStartDragListener;
+import com.unacceptable.unacceptablelibrary.Tools.RecyclerViewSwipe.SimpleItemTouchHelperCallback;
 
 /**
  * Created by zak on 11/16/2016.
@@ -24,6 +32,7 @@ import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 
 //This is going to be the new adapter to replace the old one
 public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
+    implements IItemTouchHelperAdapter
         //implements View.OnClickListener, View.OnLongClickListener
 {
     protected IAdapterViewControl m_vControl;
@@ -34,6 +43,8 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
     protected int m_iClickedItem;
     protected LayoutInflater inflater;
     private boolean m_bAddEmptyItem;
+    private ItemTouchHelper m_SimpleItemTouchHelper = null;
+
 
     public NewAdapter(int iLayout, int iDialogLayout) {
         this(iLayout, iDialogLayout, true, null);
@@ -50,6 +61,10 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
         m_vControl.attachAdapter(this);
     }
 
+    public void attachTouchCallback(ItemTouchHelper touchHelper) {
+        m_SimpleItemTouchHelper = touchHelper;
+    }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -60,8 +75,21 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         if (OnlyEmptyIngredientExists()) return;
+
+        if (holder.handleView != null) {
+            holder.handleView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                        //m_SimpleItemTouchHelperCallback.startDrag(holder);
+                        m_SimpleItemTouchHelper.startDrag(holder);
+                    }
+                    return false;
+                }
+            });
+        }
 
         ListableObject i = (ListableObject) m_Dataset.get(position);
         m_vControl.SetupViewInList(holder, i);
@@ -130,6 +158,28 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
         return false;
     }
 
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(m_Dataset, i, i+1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(m_Dataset, i, i - 1);
+            }
+        }
+
+        notifyItemMoved(fromPosition, toPosition);
+        //return true;
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        m_Dataset.remove(position);
+        notifyItemRemoved(position);
+    }
+
     /*@Override
     public boolean onLongClick(View v) {
         return false;
@@ -141,6 +191,8 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
         public TextView txtThirdLine, txtFourthLine;
         public View view;
 
+        public final ImageView handleView;
+
         public ViewHolder(View v) {
             super(v);
             view = v;
@@ -150,6 +202,8 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
 
                 txtThirdLine = (TextView) v.findViewById(R.id.thirdLine);
                 txtFourthLine = (TextView) v.findViewById(R.id.fourthLine);
+
+                handleView = v.findViewById(R.id.drag_handle);
             } finally {
 
             }
