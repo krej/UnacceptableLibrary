@@ -62,6 +62,28 @@ public class ListableObject implements Serializable {
         });
     }
 
+    public void Delete() {
+        Delete(new LibraryRepository());
+    }
+
+    public void Delete(ILibraryRepository repo) {
+        if (idString == null || idString.length() == 0) return;
+
+        String sUrl = getSingularName();
+
+        repo.Delete(sUrl, idString, new RepositoryCallback() {
+            @Override
+            public void onSuccess(String t) {
+
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+
+            }
+        });
+    }
+
     public byte[] BuildRestData() {
         //GsonBuilder gsonBuilder = new GsonBuilder().setExclusionStrategies(new JsonExclusion());
         GsonBuilder gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation();
@@ -100,4 +122,5 @@ public class ListableObject implements Serializable {
     public boolean IsEmptyObject() {
         return name.equals("Empty") && idString == null;
     }
+
 }

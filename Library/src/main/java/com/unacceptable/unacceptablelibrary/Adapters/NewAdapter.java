@@ -1,5 +1,6 @@
 package com.unacceptable.unacceptablelibrary.Adapters;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -32,7 +33,7 @@ import com.unacceptable.unacceptablelibrary.Tools.RecyclerViewSwipe.SimpleItemTo
 
 //This is going to be the new adapter to replace the old one
 public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
-    implements IItemTouchHelperAdapter
+        implements IItemTouchHelperAdapter
         //implements View.OnClickListener, View.OnLongClickListener
 {
     protected IAdapterViewControl m_vControl;
@@ -141,13 +142,19 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
 
     public void remove(ListableObject item) {
         int position = m_Dataset.indexOf(item);
-        m_Dataset.remove(position);
-        notifyItemRemoved(position);
+        remove(position);
+        //m_Dataset.remove(position);
+        //notifyItemRemoved(position);
         /*if (m_bAddEmptyItem) {
             add(new ListableObject());
             notifyDataSetChanged();
         }*/
 
+    }
+
+    public void remove(int position) {
+        m_Dataset.remove(position);
+        notifyItemRemoved(position);
     }
 
     protected boolean OnlyEmptyIngredientExists() {
@@ -252,10 +259,27 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
     public void showAddItemDialog(final Context c, final ListableObject i) {
         if (m_vControl.AddItemUsesActivity()) {
             Intent intent = m_vControl.SetupNewActivity(c, i);
-            if (intent != null)
+            if (intent != null) {
                 c.startActivity(intent);
+                //c.startActivityForResult(intent, 1);
+
+            }
         } else {
             startDialog(c, i);
+        }
+    }
+
+    public void showAddItemDialog(Activity a, int iRequestCode, ListableObject i) {
+        if (m_vControl.AddItemUsesActivity()) {
+            Intent intent = m_vControl.SetupNewActivity(a.getApplicationContext(), i);
+            if (intent != null) {
+                //c.startActivity(intent);
+                //c.startActivityForResult(intent, 1);
+                intent.putExtra("requestCode", iRequestCode);
+                a.startActivityForResult(intent, iRequestCode);
+            }
+        } else {
+            startDialog(a.getApplicationContext(), i);
         }
     }
 
