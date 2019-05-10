@@ -269,7 +269,7 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
         }
     }
 
-    public void showAddItemDialog(Activity a, int iRequestCode, ListableObject i) {
+    public void showAddItemDialog(Activity a, Context c, int iRequestCode, ListableObject i) {
         if (m_vControl.AddItemUsesActivity()) {
             Intent intent = m_vControl.SetupNewActivity(a.getApplicationContext(), i);
             if (intent != null) {
@@ -279,7 +279,7 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
                 a.startActivityForResult(intent, iRequestCode);
             }
         } else {
-            startDialog(a.getApplicationContext(), i);
+            startDialog(c, i);
         }
     }
 
