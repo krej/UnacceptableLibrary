@@ -83,12 +83,12 @@ public class Preferences {
     enum DatabaseServer {
         Desktop {
             public String toString() {
-                return "http://192.168.1.10:50421/";
+                return "http://192.168.1.12:50422/";
             }
         },
 
         LinuxDestop {
-            public String toString() { return "http://192.168.1.10:50422/"; }
+            public String toString() { return "http://192.168.1.12:50422/"; }
         },
 
         Deployd {
