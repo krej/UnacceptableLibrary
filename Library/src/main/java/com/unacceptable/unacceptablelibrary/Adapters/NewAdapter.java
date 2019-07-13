@@ -135,7 +135,7 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
     }
 
     private void removeEmptyIngredient() {
-        if (OnlyEmptyIngredientExists()) {
+        if (m_bAddEmptyItem && OnlyEmptyIngredientExists()) {
             remove(m_Dataset.get(0));
         }
     }
