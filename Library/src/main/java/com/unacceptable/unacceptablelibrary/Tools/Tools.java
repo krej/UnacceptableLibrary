@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.unacceptable.unacceptablelibrary.Adapters.IAdapterViewControl;
@@ -32,6 +33,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -283,4 +285,17 @@ public class Tools {
     }
 
 
+    public static String RoundString(double num, int decimal) {
+        DecimalFormat f = new DecimalFormat("##." + StringRepeat("0", decimal));
+        return f.format(num);
+    }
+
+    public static String StringRepeat(String s, int num) {
+        String r = "";
+        for (int i = 0; i < num; i++) {
+            r += s;
+        }
+
+        return r;
+    }
 }
