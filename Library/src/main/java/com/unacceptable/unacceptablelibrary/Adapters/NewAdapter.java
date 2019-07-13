@@ -158,6 +158,7 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
     }
 
     protected boolean OnlyEmptyIngredientExists() {
+        if (!m_bAddEmptyItem) return false;
         return (m_Dataset.size() == 1 && m_Dataset.get(0).IsEmptyObject());
     }
 
