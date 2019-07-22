@@ -21,6 +21,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import com.unacceptable.unacceptablelibrary.Logic.BaseLogic;
 import com.unacceptable.unacceptablelibrary.R;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 import com.unacceptable.unacceptablelibrary.Tools.RecyclerViewSwipe.IItemTouchHelperAdapter;
@@ -46,6 +47,12 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
     private boolean m_bAddEmptyItem;
     private ItemTouchHelper m_SimpleItemTouchHelper = null;
 
+    public interface INotifySwipeDelete {
+        //void notifyDelete(BaseLogic controller, int position);
+        void notifyDelete();
+    }
+
+    private INotifySwipeDelete m_notifiySwipeDelete;
 
     public NewAdapter(int iLayout, int iDialogLayout) {
         this(iLayout, iDialogLayout, true, null);
@@ -60,6 +67,10 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
             add(new ListableObject());
         m_vControl = viewControl;
         m_vControl.attachAdapter(this);
+    }
+
+    public void setNotifySwipeDelete(INotifySwipeDelete nsd) {
+        m_notifiySwipeDelete = nsd;
     }
 
     public void attachTouchCallback(ItemTouchHelper touchHelper) {
@@ -186,6 +197,8 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
     public void onItemDismiss(int position) {
         m_Dataset.remove(position);
         notifyItemRemoved(position);
+        if (m_notifiySwipeDelete != null)
+            m_notifiySwipeDelete.notifyDelete();
     }
 
     /*@Override
