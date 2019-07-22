@@ -49,7 +49,7 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
 
     public interface INotifySwipeDelete {
         //void notifyDelete(BaseLogic controller, int position);
-        void notifyDelete();
+        void notifyDelete(int position, ListableObject i);
     }
 
     private INotifySwipeDelete m_notifiySwipeDelete;
@@ -195,10 +195,11 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
 
     @Override
     public void onItemDismiss(int position) {
+        ListableObject i = m_Dataset.get(position);
         m_Dataset.remove(position);
         notifyItemRemoved(position);
         if (m_notifiySwipeDelete != null)
-            m_notifiySwipeDelete.notifyDelete();
+            m_notifiySwipeDelete.notifyDelete(position, i);
     }
 
     /*@Override
