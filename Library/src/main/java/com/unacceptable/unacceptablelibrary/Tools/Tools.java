@@ -298,4 +298,11 @@ public class Tools {
 
         return r;
     }
+
+    public static double DecimalPart(double value) {
+        String valueAsString = String.valueOf(value);
+        int decimalPos = valueAsString.indexOf(".");
+        String sDecimalPart = valueAsString.substring(decimalPos + 1);
+        return Tools.ParseDouble(sDecimalPart);
+    }
 }
