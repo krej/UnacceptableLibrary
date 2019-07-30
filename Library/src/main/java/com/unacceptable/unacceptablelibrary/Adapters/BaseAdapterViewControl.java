@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
+import com.unacceptable.unacceptablelibrary.Logic.BaseLogic;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 
 import java.io.Serializable;
@@ -39,4 +40,9 @@ public abstract class BaseAdapterViewControl implements IAdapterViewControl, Ser
     public Intent SetupNewActivity(Context c, ListableObject i) {
         return null;
     }
+
+    public void setReadOnly(NewAdapter.ViewHolder viewHolder, boolean bReadOnly) {
+        //m_bReadOnly = bReadOnly;
+    }
+
 }

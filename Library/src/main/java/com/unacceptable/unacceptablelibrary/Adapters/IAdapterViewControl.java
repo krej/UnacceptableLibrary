@@ -23,4 +23,5 @@ public interface IAdapterViewControl {
     String GetAlternateRowBackgroundColor();
     boolean AddItemUsesActivity();
     Intent SetupNewActivity(Context c, ListableObject i);
+    void setReadOnly(NewAdapter.ViewHolder viewHolder, boolean bReadOnly);
 }

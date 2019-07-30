@@ -12,6 +12,7 @@ import com.unacceptable.unacceptablelibrary.Adapters.NewAdapter;
 
 public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     private final NewAdapter m_Adapter;
+    private boolean m_bAllowSwipe = true;
 
     public SimpleItemTouchHelperCallback(NewAdapter adapter) {
         m_Adapter = adapter;
@@ -19,8 +20,14 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-        int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-        int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+        int dragFlags = 0;
+        int swipeFlags = 0;
+
+        if (m_bAllowSwipe) {
+            dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+            swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+        }
+
         return makeMovementFlags(dragFlags, swipeFlags);
     }
 
@@ -36,6 +43,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+
         m_Adapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
 
         return true;
@@ -43,6 +51,11 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+
         m_Adapter.onItemDismiss(viewHolder.getAdapterPosition());
+    }
+
+    public void setAllowSwipe(boolean bAllowSwipe) {
+        m_bAllowSwipe = bAllowSwipe;
     }
 }
