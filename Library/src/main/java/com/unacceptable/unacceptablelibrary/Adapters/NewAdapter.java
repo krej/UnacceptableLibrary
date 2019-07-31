@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +29,7 @@ import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 import com.unacceptable.unacceptablelibrary.Tools.RecyclerViewSwipe.IItemTouchHelperAdapter;
 import com.unacceptable.unacceptablelibrary.Tools.RecyclerViewSwipe.OnStartDragListener;
 import com.unacceptable.unacceptablelibrary.Tools.RecyclerViewSwipe.SimpleItemTouchHelperCallback;
+import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 /**
  * Created by zak on 11/16/2016.
@@ -34,18 +37,22 @@ import com.unacceptable.unacceptablelibrary.Tools.RecyclerViewSwipe.SimpleItemTo
 
 //This is going to be the new adapter to replace the old one
 public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
-        implements IItemTouchHelperAdapter
+        implements IItemTouchHelperAdapter, Filterable
         //implements View.OnClickListener, View.OnLongClickListener
 {
     protected IAdapterViewControl m_vControl;
 
     protected ArrayList<ListableObject> m_Dataset;
+    protected ArrayList<ListableObject> m_DatasetFiltered;
     protected int m_iLayout;
     protected int m_iDialogLayout;
     protected int m_iClickedItem;
     protected LayoutInflater inflater;
     private boolean m_bAddEmptyItem;
     private ItemTouchHelper m_SimpleItemTouchHelper = null;
+    private SimpleItemTouchHelperCallback m_SimpleItemTouchHelperCallback = null;
+
+    public boolean m_bBindingView;
 
     public interface INotifySwipeDelete {
         //void notifyDelete(BaseLogic controller, int position);
@@ -59,7 +66,8 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
     }
 
     public NewAdapter(int iLayout, int iDialogLayout, boolean bAddEmpty, IAdapterViewControl viewControl) {
-        m_Dataset = new ArrayList<ListableObject>();
+        m_Dataset = new ArrayList<>();
+        m_DatasetFiltered = new ArrayList<>();
         m_iLayout = iLayout;
         m_iDialogLayout = iDialogLayout;
         m_bAddEmptyItem = bAddEmpty;
@@ -67,14 +75,16 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
             add(new ListableObject());
         m_vControl = viewControl;
         m_vControl.attachAdapter(this);
+        getFilter().filter(""); //default to no filter
     }
 
     public void setNotifySwipeDelete(INotifySwipeDelete nsd) {
         m_notifiySwipeDelete = nsd;
     }
 
-    public void attachTouchCallback(ItemTouchHelper touchHelper) {
+    public void attachTouchCallback(ItemTouchHelper touchHelper, SimpleItemTouchHelperCallback callback) {
         m_SimpleItemTouchHelper = touchHelper;
+        m_SimpleItemTouchHelperCallback = callback;
     }
 
 
@@ -103,8 +113,11 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
             });
         }
 
-        ListableObject i = (ListableObject) m_Dataset.get(position);
+        //ListableObject i = (ListableObject) m_Dataset.get(position);
+        ListableObject i = (ListableObject) m_DatasetFiltered.get(position);
+        m_bBindingView = true;
         m_vControl.SetupViewInList(holder, i);
+        m_bBindingView = false;
 
         if (m_vControl.AlternateRowColors()) {
             if (position % 2 == 0) {
@@ -129,7 +142,7 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
 
     @Override
     public int getItemCount() {
-        return m_Dataset.size();
+        return m_DatasetFiltered.size();
     }
 
     public void add(int position, ListableObject item) {
@@ -238,7 +251,7 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
                     m_iClickedItem = getLayoutPosition();
                     if (size() > 0) {
                         //AddItem(v.getContext(), m_Dataset.get(m_iClickedItem));
-                        m_vControl.onItemClick(v, m_Dataset.get(m_iClickedItem));
+                        m_vControl.onItemClick(v, m_DatasetFiltered.get(m_iClickedItem));
                     }
                 }
             });
@@ -246,7 +259,7 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
             v.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    m_vControl.onItemLongPress(v, m_Dataset.get(getLayoutPosition()));
+                    m_vControl.onItemLongPress(v, m_DatasetFiltered.get(getLayoutPosition()));
                     return false;
                 }
             });
@@ -357,5 +370,51 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
 
     public IAdapterViewControl getAdapterViewControl() {
         return m_vControl;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                String charString = constraint.toString();
+                if (Tools.IsEmptyString(charString)) {
+                    m_DatasetFiltered = m_Dataset;
+                } else {
+                    ArrayList<ListableObject> filtered = new ArrayList<>();
+                    for (ListableObject o : m_Dataset) {
+                        if (o.name.toLowerCase().contains(charString.toLowerCase())) {
+                            filtered.add(o);
+                        }
+                    }
+
+                    m_DatasetFiltered = filtered;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = m_DatasetFiltered;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                m_DatasetFiltered = (ArrayList<ListableObject>)results.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
+    public void setReadOnly(boolean bReadOnly, RecyclerView recyclerView) {
+        setAllowSwipe(!bReadOnly);
+
+        for (int i = 0; i < recyclerView.getChildCount(); i++) {
+            ViewHolder holder = (ViewHolder)recyclerView.findViewHolderForAdapterPosition(i);
+            m_vControl.setReadOnly(holder, bReadOnly);
+        }
+
+    }
+
+    public void setAllowSwipe(boolean bAllowSwipe) {
+        m_SimpleItemTouchHelperCallback.setAllowSwipe(bAllowSwipe);
     }
 }

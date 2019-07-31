@@ -205,9 +205,9 @@ public class Tools {
         }
 
         if (bAddSwipeGestures) {
-            ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+            SimpleItemTouchHelperCallback callback = new SimpleItemTouchHelperCallback(adapter);
             ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-            adapter.attachTouchCallback(touchHelper);
+            adapter.attachTouchCallback(touchHelper, callback);
             touchHelper.attachToRecyclerView(recyclerView);
         }
 
@@ -230,11 +230,17 @@ public class Tools {
     public static String ParseVolleyError(VolleyError error) {
         String sMessage;
 
-        if (error == null || error.networkResponse == null)
+        if (error == null) // || error.networkResponse == null)
             return "Null volley error";
 
-        int iStatusCode = error.networkResponse.statusCode;
-        if (iStatusCode != 200) {
+        int iStatusCode = -1;
+        try {
+            iStatusCode = error.networkResponse.statusCode;
+        } catch (Exception e) {
+
+        }
+
+        if (iStatusCode != 200 && iStatusCode != -1) {
             sMessage = "Error: Response Code: " + String.valueOf(iStatusCode);
         } else {
             //error.networkResponse.
