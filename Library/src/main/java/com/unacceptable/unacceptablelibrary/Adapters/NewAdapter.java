@@ -417,4 +417,8 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
     public void setAllowSwipe(boolean bAllowSwipe) {
         m_SimpleItemTouchHelperCallback.setAllowSwipe(bAllowSwipe);
     }
+
+    public void setSwipeFlags(int iSwipeFlags) {
+        m_SimpleItemTouchHelperCallback.setSwipeFlags(iSwipeFlags);
+    }
 }

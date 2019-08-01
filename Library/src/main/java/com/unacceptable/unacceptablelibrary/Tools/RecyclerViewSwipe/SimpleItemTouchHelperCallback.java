@@ -14,8 +14,11 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     private final NewAdapter m_Adapter;
     private boolean m_bAllowSwipe = true;
 
+    private int m_iSwipeFlags;
+
     public SimpleItemTouchHelperCallback(NewAdapter adapter) {
         m_Adapter = adapter;
+        m_iSwipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
     }
 
     @Override
@@ -25,7 +28,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
         if (m_bAllowSwipe) {
             dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-            swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+            swipeFlags = m_iSwipeFlags;// ItemTouchHelper.START | ItemTouchHelper.END;
         }
 
         return makeMovementFlags(dragFlags, swipeFlags);
@@ -57,5 +60,9 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     public void setAllowSwipe(boolean bAllowSwipe) {
         m_bAllowSwipe = bAllowSwipe;
+    }
+
+    public void setSwipeFlags(int iSwipeFlags) {
+        m_iSwipeFlags = iSwipeFlags;
     }
 }

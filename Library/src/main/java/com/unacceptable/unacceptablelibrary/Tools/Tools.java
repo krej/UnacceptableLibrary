@@ -10,6 +10,8 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -310,5 +312,14 @@ public class Tools {
         int decimalPos = valueAsString.indexOf(".");
         String sDecimalPart = valueAsString.substring(decimalPos + 1);
         return Tools.ParseDouble(sDecimalPart);
+    }
+
+    public static void hideKeyboard(Activity a) {
+        InputMethodManager imm = (InputMethodManager) a.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View v = a.getCurrentFocus();
+        if (v == null)
+            v = new View(a);
+
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 }
