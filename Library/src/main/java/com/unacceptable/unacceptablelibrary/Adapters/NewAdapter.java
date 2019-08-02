@@ -23,11 +23,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.unacceptable.unacceptablelibrary.Logic.BaseLogic;
 import com.unacceptable.unacceptablelibrary.R;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 import com.unacceptable.unacceptablelibrary.Tools.RecyclerViewSwipe.IItemTouchHelperAdapter;
-import com.unacceptable.unacceptablelibrary.Tools.RecyclerViewSwipe.OnStartDragListener;
 import com.unacceptable.unacceptablelibrary.Tools.RecyclerViewSwipe.SimpleItemTouchHelperCallback;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
@@ -40,19 +38,17 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
         implements IItemTouchHelperAdapter, Filterable
         //implements View.OnClickListener, View.OnLongClickListener
 {
-    protected IAdapterViewControl m_vControl;
+    private IAdapterViewControl m_vControl;
 
-    protected ArrayList<ListableObject> m_Dataset;
-    protected ArrayList<ListableObject> m_DatasetFiltered;
-    protected int m_iLayout;
-    protected int m_iDialogLayout;
-    protected int m_iClickedItem;
+    private ArrayList<ListableObject> m_Dataset;
+    private ArrayList<ListableObject> m_DatasetFiltered;
+    private int m_iLayout;
+    private int m_iDialogLayout;
+    private int m_iClickedItem;
     protected LayoutInflater inflater;
     private boolean m_bAddEmptyItem;
     private ItemTouchHelper m_SimpleItemTouchHelper = null;
     private SimpleItemTouchHelperCallback m_SimpleItemTouchHelperCallback = null;
-
-    public boolean m_bBindingView;
 
     public interface INotifySwipeDelete {
         //void notifyDelete(BaseLogic controller, int position);
@@ -115,9 +111,7 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
 
         //ListableObject i = (ListableObject) m_Dataset.get(position);
         ListableObject i = (ListableObject) m_DatasetFiltered.get(position);
-        m_bBindingView = true;
         m_vControl.SetupViewInList(holder, i);
-        m_bBindingView = false;
 
         if (m_vControl.AlternateRowColors()) {
             if (position % 2 == 0) {

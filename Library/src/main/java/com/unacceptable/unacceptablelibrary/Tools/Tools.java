@@ -55,12 +55,20 @@ public class Tools {
     public static int SAMSUNG_CURVED_SCREEN_PADDING = 25;
 
     public static double ParseDouble(String d) {
-        if (d.length() == 0 ) return 0;
-        return Double.parseDouble(d);
+        try {
+            if (d.length() == 0) return 0;
+            return Double.parseDouble(d);
+        } catch (Exception e) {
+            return 0;
+        }
     }
     public static int ParseInt(String d) {
-        if (d.length() == 0 ) return 0;
-        return Integer.parseInt(d);
+        try {
+            if (d.length() == 0) return 0;
+            return Integer.parseInt(d);
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     public static int ParseInt(EditText et) {
