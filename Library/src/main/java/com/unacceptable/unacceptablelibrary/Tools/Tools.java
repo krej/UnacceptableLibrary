@@ -323,6 +323,8 @@ public class Tools {
     }
 
     public static void hideKeyboard(Activity a) {
+        if (a == null) return;
+
         InputMethodManager imm = (InputMethodManager) a.getSystemService(Activity.INPUT_METHOD_SERVICE);
         View v = a.getCurrentFocus();
         if (v == null)
