@@ -86,7 +86,7 @@ public class ListableObject implements Serializable {
 
     public byte[] BuildRestData() {
         //GsonBuilder gsonBuilder = new GsonBuilder().setExclusionStrategies(new JsonExclusion());
-        GsonBuilder gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation();
+        GsonBuilder gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeSpecialFloatingPointValues();
         Gson gson = gsonBuilder.create();
         String json = gson.toJson(this);
         return json.getBytes();

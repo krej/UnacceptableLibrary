@@ -59,6 +59,8 @@ public class Preferences {
                 return DatabaseServer.BeerNet;
             case 2:
                 return DatabaseServer.LinuxDestop;
+            case 3:
+                return DatabaseServer.BeerNetDev;
         }
 
         return DatabaseServer.Desktop;
@@ -91,15 +93,15 @@ public class Preferences {
             public String toString() { return "http://192.168.1.12:50422/"; }
         },
 
-        Deployd {
+        BeerNet {
             public String toString() {
-                return "http://rest.unacceptable.beer:2403";
+                return "https://rest.unacceptable.beer/";
             }
         },
 
-        BeerNet {
+        BeerNetDev {
             public String toString() {
-                return "http://rest.unacceptable.beer:5123/";
+                return "https://dev.unacceptable.beer/";
             }
         }
 
