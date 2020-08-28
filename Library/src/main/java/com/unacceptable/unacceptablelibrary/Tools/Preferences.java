@@ -81,11 +81,29 @@ public class Preferences {
 
     public static String BeerNetAPIURL() {return Server().toString() + "beernet"; }
 
+    /*
+        Note to future self: If you're here, you're probably wondering why you can't get the emulator to connect to the desktop API.
+        The reason is because the emulator is it's own computer, so it cannot connect through http://localhost. It needs to use the IP address,
+        but the API doesn't allow that by default.
+        To fix it...
 
+        The reason the port changes is because of the IIS Express or BeerNet solution profiles. Normally I use IIS because its the default,
+        but sometimes it says it cannot connect to IIS. To fix this, Go to the profile properties and set the URL to http://localhost:50421.
+        Then exit VS and delete the (project).vs\applicationhost.config file. Restart VS. It should start working.
+
+        To fix not being able to connect, use the "BeerNet" profile. Open the following file:
+
+        C:\Users\Zak\source\repos\BeerNet\BeerNet\Properties\launchSettings.json
+
+        Change the BeerNet applicationUrl to http://192.168.1.6:50421
+
+        Changing it in the VS UI DOES NOT WORK! I don't know why, but it doesn't keep.
+
+     */
     enum DatabaseServer {
         Desktop {
             public String toString() {
-                return "http://192.168.1.12:50421/";
+                return "http://192.168.1.6:50421/";
             }
         },
 

@@ -15,7 +15,11 @@ public class LoginRepository implements ILoginRepository {
         //body.getBytes
         String sLoginURL = Preferences.BeerNetAPIURL() + "/Login";
 
-        Network.WebRequest(Request.Method.POST, sLoginURL, body, new Response.Listener<String>() {
+
+
+        Network.WebRequest(Request.Method.POST, sLoginURL, body.getBytes(), callback, false);
+
+        /*Network.WebRequest(Request.Method.POST, sLoginURL, body, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -33,6 +37,6 @@ public class LoginRepository implements ILoginRepository {
             }
         },
                 false);
-
+*/
     }
 }
