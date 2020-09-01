@@ -86,6 +86,8 @@ public class Preferences {
                 return DatabaseServer.BeerNet;
             case "BeerNet_Desktop":
                 return DatabaseServer.Desktop;
+            case "BeerNet_Dev":
+                return DatabaseServer.BeerNetDev;
         }
 
         return DatabaseServer.Desktop;
