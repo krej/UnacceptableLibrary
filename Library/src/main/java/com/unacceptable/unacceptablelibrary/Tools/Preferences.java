@@ -14,7 +14,7 @@ public class Preferences {
     public static String m_sAPISubName; //TODO: Should i save this elsewhere? In shared prefs? probably?
     //private static Context mCtx;
 
-    private Preferences(Context context, String sAPISubName) {
+    protected Preferences(Context context, String sAPISubName) {
         //I didn't save context because AndroidStudio yelled at me about having android objects as static variables
         //but maybe this will need to change as you change preferences, maybe it needs to recreate the preferences stuff? dont know
         //mCtx = context;
@@ -34,6 +34,7 @@ public class Preferences {
         return mInstance;
     }
 
+
     public static String GetAPIToken() {
         String APIToken = m_sharedPrefs.getString("APIToken", "");
         return APIToken;
@@ -44,15 +45,26 @@ public class Preferences {
     }
 
     public static DatabaseServer Server() {
-        int iServer;
+        /*int iServer;
         try {
             iServer = m_Settings.getInt("apiServer", 0);
         } catch (Exception ex) {
             String sServer = m_Settings.getString("apiServer", "0");
             iServer = ParseInt(sServer);
+        }*/
+
+        String sServer = "";
+        try {
+            sServer = m_Settings.getString("apiServer", "Desktop");
+        } catch (Exception ex) {
+
         }
 
-        switch (iServer) {
+        return GetServerEnum(sServer);
+    }
+
+    protected static DatabaseServer GetServerEnum(String sServer) {
+        /*switch (iServer) {
             case 0:
                 return DatabaseServer.Desktop;
             case 1:
@@ -63,15 +75,28 @@ public class Preferences {
                 return DatabaseServer.BeerNetDev;
         }
 
+        return DatabaseServer.Desktop;*/
+
+        switch (sServer) {
+            case "HealthNet":
+                return DatabaseServer.HealthNet;
+            case "HealthNet_Desktop":
+                return DatabaseServer.HealthNet_Desktop;
+            case "BeerNet":
+                return DatabaseServer.BeerNet;
+            case "BeerNet_Desktop":
+                return DatabaseServer.Desktop;
+        }
+
         return DatabaseServer.Desktop;
     }
 
     //TODO: I don't really like having these here but they work for now...
     public static String RestAPIURL() {
-        /*if (UseTestServer)
-            return "http://192.168.1.11:50421/beernet";
+        //if (UseTestServer)
+        //    return "http://192.168.1.11:50421/beernet";
 
-        return "http://rest.unacceptable.beer:2403";*/
+        //return "http://rest.unacceptable.beer:2403";
         return Server().toString() + m_sAPISubName;
     }
 
@@ -100,7 +125,7 @@ public class Preferences {
         Changing it in the VS UI DOES NOT WORK! I don't know why, but it doesn't keep.
 
      */
-    enum DatabaseServer {
+    protected enum DatabaseServer {
         Desktop {
             public String toString() {
                 return "http://192.168.1.6:50421/";
@@ -121,6 +146,14 @@ public class Preferences {
             public String toString() {
                 return "https://dev.unacceptable.beer/";
             }
+        },
+
+        HealthNet_Desktop {
+            public String toString() { return "http://192.168.1.6:50422/"; }
+        },
+
+        HealthNet {
+            public String toString() { return "http://rest.unacceptable.beer:999/"; }
         }
 
     }
