@@ -28,12 +28,14 @@ import com.unacceptable.unacceptablelibrary.Adapters.NewAdapter;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 import com.unacceptable.unacceptablelibrary.Tools.RecyclerViewSwipe.SimpleItemTouchHelperCallback;
 
+import org.apache.commons.codec.binary.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -331,5 +333,27 @@ public class Tools {
             v = new View(a);
 
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }
+
+    public static String decodeBase64(String s) {
+        if (s == null) return null;
+
+        try {
+            byte[] decoded = Base64.decodeBase64(s);
+            return new String(decoded, "UTF-16");
+        } catch (UnsupportedEncodingException e) {
+            return s;
+        }
+
+    }
+
+    public static String encodeToBase64(String s) {
+        if (s == null) return null;
+
+        try {
+            return Base64.encodeBase64String(s.getBytes("UTF-16"));
+        } catch (UnsupportedEncodingException e) {
+            return Base64.encodeBase64String(s.getBytes());
+        }
     }
 }
