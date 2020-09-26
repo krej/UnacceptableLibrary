@@ -1,6 +1,7 @@
 package com.unacceptable.unacceptablelibrary.Tools;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +14,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -25,6 +27,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.unacceptable.unacceptablelibrary.Adapters.IAdapterViewControl;
 import com.unacceptable.unacceptablelibrary.Adapters.NewAdapter;
+import com.unacceptable.unacceptablelibrary.Models.CustomCallback;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 import com.unacceptable.unacceptablelibrary.Tools.RecyclerViewSwipe.SimpleItemTouchHelperCallback;
 
@@ -376,5 +379,38 @@ public class Tools {
 
     public static boolean isHttpCleartextError(VolleyError error) {
         return error != null && error.getCause() != null && error.getCause().toString().contains("Cleartext HTTP traffic");
+    }
+
+    public static Date addDays(Date dt, int days) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(dt);
+        c.add(Calendar.DATE, days);
+        return c.getTime();
+    }
+
+    public static void ShowCalendar(Context context, final CustomCallback callback) {
+        final Calendar cal = Calendar.getInstance();
+
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                cal.set(Calendar.YEAR, year);
+                cal.set(Calendar.MONTH, month);
+                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                //m_oController.setDate(cal, dateType);
+                callback.Complete(cal);
+            }
+        };
+
+
+
+        DatePickerDialog dialogDatePicker = new DatePickerDialog(context, dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+        dialogDatePicker.getDatePicker().setFirstDayOfWeek(Calendar.MONDAY);
+        dialogDatePicker.show();
+    }
+
+    public static boolean isSameDay(Calendar cal1, Calendar cal2) {
+        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
     }
 }
