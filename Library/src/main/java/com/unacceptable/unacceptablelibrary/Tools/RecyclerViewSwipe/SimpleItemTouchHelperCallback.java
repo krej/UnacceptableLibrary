@@ -16,6 +16,8 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private int m_iSwipeFlags;
 
+    private boolean m_bSwipeBack;
+
     public SimpleItemTouchHelperCallback(NewAdapter adapter) {
         m_Adapter = adapter;
         m_iSwipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
@@ -65,4 +67,5 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     public void setSwipeFlags(int iSwipeFlags) {
         m_iSwipeFlags = iSwipeFlags;
     }
+
 }

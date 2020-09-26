@@ -59,7 +59,9 @@ public class LoginLogic extends BaseLogic<LoginLogic.View> {
 
             @Override
             public void onError(VolleyError error) {
-                view.showError("Failed to login: " + error.getMessage());
+                //String sError = error == null || error.getMessage() == null? "Unknown error" : error.getMessage();
+                String sError = error != null && error.networkResponse != null ? String.valueOf(error.networkResponse.statusCode) : "Unknown error";
+                view.showError("Failed to login: " + sError);
                 view.showProgress(false);
             }
         });

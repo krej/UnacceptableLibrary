@@ -176,11 +176,28 @@ public class Tools {
         return calendar.getTime();
     }
 
-    //TODO: Need to handle this returning a Response object
     public static <T> T convertJsonResponseToObject(String json, Class<T> c) {
+        return convertJsonResponseToObject(json, c, false);
+    }
+
+    //TODO: Need to handle this returning a Response object
+    public static <T> T convertJsonResponseToObject(String json, Class<T> c, boolean bSetDateFormat) {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.create();
-        return gson.fromJson(json, c);
+        Gson gson;
+
+        if (bSetDateFormat) {
+            gson = gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create();
+        } else {
+            gson = gsonBuilder.create();
+        }
+
+        try {
+            return gson.fromJson(json, c);
+        } catch (Exception ex) {
+            String s = ex.toString();
+        }
+
+        return null;
     }
 
 
@@ -355,5 +372,9 @@ public class Tools {
         } catch (UnsupportedEncodingException e) {
             return Base64.encodeBase64String(s.getBytes());
         }
+    }
+
+    public static boolean isHttpCleartextError(VolleyError error) {
+        return error != null && error.getCause() != null && error.getCause().toString().contains("Cleartext HTTP traffic");
     }
 }

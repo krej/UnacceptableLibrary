@@ -106,7 +106,14 @@ public class Preferences {
         return Server().toString() + "health";
     }
 
-    public static String BeerNetAPIURL() {return Server().toString() + "beernet"; }
+    public static String BeerNetAPIURL() {
+        if (Server() == DatabaseServer.HealthNet)
+            return DatabaseServer.BeerNet.toString() + "beernet";
+        if (Server() == DatabaseServer.HealthNet_Desktop)
+            return DatabaseServer.Desktop.toString() + "beernet";
+
+        return Server().toString() + "beernet";
+    }
 
     /*
         Note to future self: If you're here, you're probably wondering why you can't get the emulator to connect to the desktop API.
@@ -130,7 +137,7 @@ public class Preferences {
     protected enum DatabaseServer {
         Desktop {
             public String toString() {
-                return "http://192.168.1.6:50421/";
+                return "http://192.168.1.69:50421/";
             }
         },
 
@@ -151,7 +158,7 @@ public class Preferences {
         },
 
         HealthNet_Desktop {
-            public String toString() { return "http://192.168.1.6:50422/"; }
+            public String toString() { return "http://192.168.1.69:50422/"; }
         },
 
         HealthNet {

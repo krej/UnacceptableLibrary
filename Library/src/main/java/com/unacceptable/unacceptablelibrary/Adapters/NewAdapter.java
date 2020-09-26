@@ -121,17 +121,6 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
                 holder.view.setBackgroundColor(Color.parseColor(m_vControl.GetAlternateRowBackgroundColor()));
             }
         }
-
-        //final String name = mDataset.get(position).Name;
-        //holder.txtHeader.setText(m_Dataset.get(position).Name);
-        /*holder.txtHeader.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                remove(name);
-            }
-        });*/
-
-        //holder.txtFooter.setText("Time: " + mDataset.get(position).Time + " min");
     }
 
     @Override
@@ -409,10 +398,12 @@ public class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder>
     }
 
     public void setAllowSwipe(boolean bAllowSwipe) {
-        m_SimpleItemTouchHelperCallback.setAllowSwipe(bAllowSwipe);
+        if (m_SimpleItemTouchHelperCallback != null)
+            m_SimpleItemTouchHelperCallback.setAllowSwipe(bAllowSwipe);
     }
 
     public void setSwipeFlags(int iSwipeFlags) {
-        m_SimpleItemTouchHelperCallback.setSwipeFlags(iSwipeFlags);
+        if (m_SimpleItemTouchHelperCallback != null)
+            m_SimpleItemTouchHelperCallback.setSwipeFlags(iSwipeFlags);
     }
 }
