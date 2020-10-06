@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,7 +22,6 @@ import com.unacceptable.unacceptablelibrary.Logic.LoginLogic;
 import com.unacceptable.unacceptablelibrary.R;
 import com.unacceptable.unacceptablelibrary.Repositories.LoginRepository;
 import com.unacceptable.unacceptablelibrary.Tools.Network;
-import com.unacceptable.unacceptablelibrary.Tools.Preferences;
 import com.unacceptable.unacceptablelibrary.Tools.Tools;
 
 /**

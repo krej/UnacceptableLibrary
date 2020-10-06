@@ -1,25 +1,18 @@
 package com.unacceptable.unacceptablelibrary;
 
-import android.app.Activity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.unacceptable.unacceptablelibrary.Adapters.IAdapterViewControl;
 import com.unacceptable.unacceptablelibrary.Adapters.NewAdapter;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
 import com.unacceptable.unacceptablelibrary.Screens.ExampleRecyclerViewTest;
-import com.unacceptable.unacceptablelibrary.Screens.LoginActivity;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
-import org.robolectric.shadows.ShadowActivity;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;

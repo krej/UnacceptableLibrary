@@ -4,13 +4,12 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
+
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -22,7 +21,6 @@ import android.widget.Toast;
 
 
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.unacceptable.unacceptablelibrary.Adapters.IAdapterViewControl;
@@ -41,15 +39,12 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * Created by zak on 11/16/2016.
