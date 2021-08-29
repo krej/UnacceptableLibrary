@@ -2,6 +2,7 @@ package com.unacceptable.unacceptablelibrary.Repositories;
 
 import android.os.SystemClock;
 
+import java.time.OffsetDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -19,6 +20,11 @@ public class TimeSource implements ITimeSource {
     @Override
     public Date getTodaysDate() {
         return new Date();
+    }
+
+    @Override
+    public OffsetDateTime getTodaysDateOffset() {
+        return OffsetDateTime.now();
     }
 
     @Override

@@ -1,8 +1,10 @@
 package com.unacceptable.unacceptablelibrary.Tools;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 
 import androidx.core.content.ContextCompat;
@@ -10,11 +12,14 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.ItemTouchHelper;
+
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,20 +31,28 @@ import com.google.gson.GsonBuilder;
 import com.unacceptable.unacceptablelibrary.Adapters.IAdapterViewControl;
 import com.unacceptable.unacceptablelibrary.Adapters.NewAdapter;
 import com.unacceptable.unacceptablelibrary.Models.CustomCallback;
+import com.unacceptable.unacceptablelibrary.Models.ExceptionLog;
 import com.unacceptable.unacceptablelibrary.Models.ListableObject;
+import com.unacceptable.unacceptablelibrary.R;
+import com.unacceptable.unacceptablelibrary.Repositories.ILibraryRepository;
+import com.unacceptable.unacceptablelibrary.Repositories.ITimeSource;
 import com.unacceptable.unacceptablelibrary.Tools.RecyclerViewSwipe.SimpleItemTouchHelperCallback;
 
-import org.apache.commons.codec.binary.Base64;
+//import org.apache.commons.codec.binary.Base64;
+import android.util.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -354,7 +367,9 @@ public class Tools {
         if (s == null) return null;
 
         try {
-            byte[] decoded = Base64.decodeBase64(s);
+
+            //byte[] decoded = Base64.decodeBase64(s);
+            byte[] decoded = Base64.decode(s, Base64.DEFAULT);
             return new String(decoded, "UTF-16");
         } catch (UnsupportedEncodingException e) {
             return s;
@@ -366,9 +381,11 @@ public class Tools {
         if (s == null) return null;
 
         try {
-            return Base64.encodeBase64String(s.getBytes("UTF-16"));
+            return Base64.encodeToString(s.getBytes("UTF-16"), Base64.DEFAULT);
+            //return Base64.encodeBase64String(s.getBytes("UTF-16"));
         } catch (UnsupportedEncodingException e) {
-            return Base64.encodeBase64String(s.getBytes());
+            return Base64.encodeToString(s.getBytes(), Base64.DEFAULT);
+            //return Base64.encodeBase64String(s.getBytes());
         }
     }
 
@@ -408,4 +425,56 @@ public class Tools {
         return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
                 cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
     }
+
+    public static void LogException(Throwable e, String sSource, ITimeSource timeSource, ILibraryRepository repo, Context c) {
+        OffsetDateTime time = null;
+        if (timeSource != null)
+            time = timeSource.getTodaysDateOffset();
+
+        ExceptionLog log = new ExceptionLog(e, sSource, time);
+
+        log.Save(repo, "ExceptionLog");
+
+        ShowToast(c, "Exception Logged", Toast.LENGTH_SHORT);
+    }
+
+    public static void CreateAlertDialog(final Context c, String message, boolean bShowNegativeButton) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(c);
+
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+
+        if (bShowNegativeButton) {
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                }
+            });
+        }
+
+        //View v = SetupDialog(c,i);
+        LayoutInflater inflater = (LayoutInflater)c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflater.inflate(R.layout.one_line_list, null);
+        TextView tvMessage = v.findViewById(R.id.firstLine);
+        SetText(tvMessage, message);
+
+        builder.setView(v);
+        final AlertDialog dialog = builder.create();
+
+        dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                //if (!m_vControl.onDialogOkClicked(dialog, i)) return;
+
+                //notifyDataSetChanged();
+                dialog.dismiss();
+            }
+        });
+
+    }
+
 }
