@@ -158,7 +158,7 @@ public class Preferences {
         },
 
         HealthNet_Desktop {
-            public String toString() { return "http://192.168.1.69:50422/"; }
+            public String toString() { return "http://192.168.1.248:50422/"; }
         },
 
         HealthNet {
